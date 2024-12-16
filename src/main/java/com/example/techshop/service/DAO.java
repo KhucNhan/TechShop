@@ -11,7 +11,7 @@ public class DAO implements IDAO {
     private final String jdbcURL = "jdbc:mysql://localhost:3306/techshop";
     private final String jdbcUsername = "root";
     private final String jdbcPassword = "nhan771026";
-
+    private static final String SELECT_USER_BY_UP = "select * from users where username = ? and password = ?";
     private static final String INSERT_USERS_SQL = "INSERT INTO Users (name, username, password, gender, dateOfBirth) VALUES (?, ?, ?, ?, ?);";
     private static final String SELECT_USER_BY_ID = "select * from users where userID =?";
     private static final String SELECT_ALL_USERS = "select * from users";
@@ -256,6 +256,35 @@ public class DAO implements IDAO {
                 ));
             }
             return products;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public User checkLogin(String username, String password) {
+        connection = getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_UP);
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return new User(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getString(5),
+                        resultSet.getString(6),
+                        resultSet.getDate(7),
+                        resultSet.getString(8),
+                        resultSet.getBoolean(9)
+                );
+            } else {
+                return null;
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
