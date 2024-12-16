@@ -15,15 +15,15 @@ public class DAO implements IDAO {
     private static final String INSERT_USERS_SQL = "INSERT INTO Users (name, username, password, gender, dateOfBirth) VALUES (?, ?, ?, ?, ?);";
     private static final String SELECT_USER_BY_ID = "select * from users where userID =?";
     private static final String SELECT_ALL_USERS = "select * from users";
-    private static final String DELETE_USERS_SQL = "delete from users where userID = ?;";
+    private static final String DELETE_USERS_SQL = "update users set status = false where userID = ?;";
     private static final String UPDATE_USERS_SQL = "update users set image = ?, name = ?, username = ?, password = ?, gender = ?, dateOfBirth = ? where userID = ?;";
 
     private static final String INSERT_PRODUCTS_SQL = "INSERT INTO Products (name, description, price, quantity, categoryID) VALUES (?, ?, ?, ?, ?);";
     private static final String INSERT_PRODUCTS_WITH_IMG_SQL = "INSERT INTO Products (image, name, description, price, quantity, categoryID) VALUES (?, ?, ?, ?, ?, ?);";
     private static final String SELECT_PRODUCT_BY_ID = "select * from products where productID =?";
     private static final String SELECT_ALL_PRODUCTS = "select * from products";
-    private static final String DELETE_PRODUCTS_SQL = "delete from products where productID = ?;";
-    private static final String UPDATE_PRODUCTS_SQL = "update products set image = ?, name = ?, description = ?, price = ?, quantity = ?, categoryID = ? where productID = ?;";
+    private static final String DELETE_PRODUCTS_SQL = "update products set status = false where productID = ?;";
+    private static final String UPDATE_PRODUCTS_SQL = "update products set image = ?, name = ?, description = ?, price = ?, quantity = ?, categoryID = ?, status = ? where productID = ?;";
 
     private Connection connection = null;
 
@@ -198,7 +198,8 @@ public class DAO implements IDAO {
             preparedStatement.setDouble(4, product.getPrice());
             preparedStatement.setInt(5, product.getQuantity());
             preparedStatement.setInt(6, product.getCategoryID());
-            preparedStatement.setInt(7, id);
+            preparedStatement.setBoolean(7, product.isStatus());
+            preparedStatement.setInt(8, id);
             int row = preparedStatement.executeUpdate();
             return row > 0;
         } catch (SQLException e) {

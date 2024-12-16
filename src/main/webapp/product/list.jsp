@@ -33,11 +33,11 @@
                 <td><fmt:formatNumber value="${product.price}" pattern="#,###"/> VND</td>
                 <td>${product.quantity}</td>
                 <td>${product.categoryID}</td>
-                <td>${product.status}</td>
-<%--                <td>--%>
-<%--                    <a href="/users?action=edit&id=${user.id}">Edit</a>--%>
-<%--                    <a href="/users?action=delete&id=${user.id}">Delete</a>--%>
-<%--                </td>--%>
+                <td>${product.status ? 'In stock' : 'Out of stock'}</td>
+                <td>
+                    <a href="/products?action=edit&productID=${product.productID}">Edit</a>
+                    <a href="/products?action=delete&productID=${product.productID}">Delete</a>
+                </td>
             </tr>
         </c:forEach>
     </table>
