@@ -2,12 +2,40 @@ package com.example.techshop.model;
 
 public class Product {
     private int productID;
+    private String image;
     private String name;
     private String description;
     private double price;
     private int quantity;
     private int categoryID;
     private boolean status;
+
+    public Product(String name, String description, double price, int quantity, int categoryID) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+        this.categoryID = categoryID;
+    }
+
+    public Product(int productID, String image, String name, String description, double price, int quantity, int categoryID, boolean status) {
+        this.productID = productID;
+        this.image = image;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+        this.categoryID = categoryID;
+        this.status = status;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public int getProductID() {
         return productID;
@@ -62,16 +90,6 @@ public class Product {
     }
 
     public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    public Product(int productID, String name, String description, double price, int quantity, int categoryID, boolean status) {
-        this.productID = productID;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.quantity = quantity;
-        this.categoryID = categoryID;
         this.status = status;
     }
 }
