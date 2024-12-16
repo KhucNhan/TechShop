@@ -19,12 +19,13 @@ public class DAO implements IDAO {
     private static final String UPDATE_USERS_SQL = "update users set image = ?, name = ?, username = ?, password = ?, gender = ?, dateOfBirth = ? where userID = ?;";
 
     private static final String INSERT_PRODUCTS_SQL = "INSERT INTO Products (name, description, price, quantity, categoryID) VALUES (?, ?, ?, ?, ?);";
+    private static final String INSERT_PRODUCTS_WITH_IMG_SQL = "INSERT INTO Products (image, name, description, price, quantity, categoryID) VALUES (?, ?, ?, ?, ?, ?);";
     private static final String SELECT_PRODUCT_BY_ID = "select * from products where productID =?";
     private static final String SELECT_ALL_PRODUCTS = "select * from products";
     private static final String DELETE_PRODUCTS_SQL = "delete from products where productID = ?;";
-    private static final String UPDATE_PRODUCTS_SQL = "update products set name = ?, description = ?, price = ?, quantity = ?, categoryID = ? where productID = ?;";
+    private static final String UPDATE_PRODUCTS_SQL = "update products set image = ?, name = ?, description = ?, price = ?, quantity = ?, categoryID = ? where productID = ?;";
 
-    Connection connection = null;
+    private Connection connection = null;
 
     protected Connection getConnection() {
         try {
@@ -38,6 +39,7 @@ public class DAO implements IDAO {
 
     @Override
     public boolean insertUser(User user) {
+        connection = getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USERS_SQL);
             preparedStatement.setString(1, user.getName());
@@ -54,6 +56,7 @@ public class DAO implements IDAO {
 
     @Override
     public boolean deleteUser(int id) {
+        connection = getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USERS_SQL);
             preparedStatement.setInt(1, id);
@@ -66,6 +69,7 @@ public class DAO implements IDAO {
 
     @Override
     public boolean updateUser(int id, User user) {
+        connection = getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USERS_SQL);
             preparedStatement.setString(1, user.getImage());
@@ -84,6 +88,7 @@ public class DAO implements IDAO {
 
     @Override
     public User selectUser(int id) {
+        connection = getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_ID);
             preparedStatement.setInt(1, id);
@@ -111,6 +116,7 @@ public class DAO implements IDAO {
 
     @Override
     public List<User> selectAllUsers() {
+        connection = getConnection();
         List<User> users = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
@@ -137,6 +143,7 @@ public class DAO implements IDAO {
 
     @Override
     public boolean insertProduct(Product product) {
+        connection = getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PRODUCTS_SQL);
             preparedStatement.setString(1, product.getName());
@@ -150,9 +157,26 @@ public class DAO implements IDAO {
             throw new RuntimeException(e);
         }
     }
+    public boolean insertProductWithImage(Product product) {
+        connection = getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PRODUCTS_WITH_IMG_SQL);
+            preparedStatement.setString(1, product.getImage());
+            preparedStatement.setString(2, product.getName());
+            preparedStatement.setString(3, product.getDescription());
+            preparedStatement.setDouble(4, product.getPrice());
+            preparedStatement.setInt(5, product.getQuantity());
+            preparedStatement.setInt(6, product.getCategoryID());
+            int row = preparedStatement.executeUpdate();
+            return row > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public boolean deleteProduct(int id) {
+        connection = getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_PRODUCTS_SQL);
             preparedStatement.setInt(1, id);
@@ -165,14 +189,16 @@ public class DAO implements IDAO {
 
     @Override
     public boolean updateProduct(int id, Product product) {
+        connection = getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_PRODUCTS_SQL);
-            preparedStatement.setString(1, product.getName());
-            preparedStatement.setString(2, product.getDescription());
-            preparedStatement.setDouble(3, product.getPrice());
-            preparedStatement.setInt(4, product.getQuantity());
-            preparedStatement.setInt(5, product.getCategoryID());
-            preparedStatement.setInt(6, id);
+            preparedStatement.setString(1, product.getImage());
+            preparedStatement.setString(2, product.getName());
+            preparedStatement.setString(3, product.getDescription());
+            preparedStatement.setDouble(4, product.getPrice());
+            preparedStatement.setInt(5, product.getQuantity());
+            preparedStatement.setInt(6, product.getCategoryID());
+            preparedStatement.setInt(7, id);
             int row = preparedStatement.executeUpdate();
             return row > 0;
         } catch (SQLException e) {
@@ -182,6 +208,7 @@ public class DAO implements IDAO {
 
     @Override
     public Product selectProduct(int id) {
+        connection = getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PRODUCT_BY_ID);
             preparedStatement.setInt(1, id);
@@ -189,12 +216,13 @@ public class DAO implements IDAO {
 
             if (resultSet.next()) {
                 Product product = new Product(
-                        resultSet.getInt("productId"),
+                        resultSet.getInt("productID"),
+                        resultSet.getString("image"),
                         resultSet.getString("name"),
                         resultSet.getString("description"),
                         resultSet.getDouble("price"),
                         resultSet.getInt("quantity"),
-                        resultSet.getInt("categoryId"),
+                        resultSet.getInt("categoryID"),
                         resultSet.getBoolean("status")
                 );
                 return product;
@@ -208,19 +236,21 @@ public class DAO implements IDAO {
 
     @Override
     public List<Product> selectAllProducts() {
+        connection = getConnection();
         List<Product> products = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SELECT_ALL_USERS);
+            ResultSet resultSet = statement.executeQuery(SELECT_ALL_PRODUCTS);
 
             while (resultSet.next()) {
                 products.add(new Product(
-                                resultSet.getInt("productId"),
+                                resultSet.getInt("productID"),
+                                resultSet.getString("image"),
                                 resultSet.getString("name"),
                                 resultSet.getString("description"),
                                 resultSet.getDouble("price"),
                                 resultSet.getInt("quantity"),
-                                resultSet.getInt("categoryId"),
+                                resultSet.getInt("categoryID"),
                                 resultSet.getBoolean("status")
                 ));
             }
