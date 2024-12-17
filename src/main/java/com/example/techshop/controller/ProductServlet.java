@@ -52,7 +52,7 @@ public class ProductServlet extends HttpServlet {
 
     private void goToUsers(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.sendRedirect("users");
+            resp.sendRedirect("admins");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
