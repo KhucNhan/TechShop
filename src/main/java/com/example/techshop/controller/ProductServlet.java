@@ -41,9 +41,20 @@ public class ProductServlet extends HttpServlet {
             case "edit":
                 showUpdateProduct(req, resp);
                 break;
+            case "users":
+                goToUsers(req, resp);
+                break;
             default:
                 showAllProducts(req, resp);
                 break;
+        }
+    }
+
+    private void goToUsers(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            resp.sendRedirect("users");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
