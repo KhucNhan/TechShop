@@ -10,6 +10,9 @@
 <h2>
     <a href="/products?action=create">Add New Product</a>
 </h2>
+<h2>
+    <a href="/products?action=users">Go to users</a>
+</h2>
 <div align="center">
     <table border="1" cellpadding="5">
         <caption><h2>List of Product</h2></caption>
