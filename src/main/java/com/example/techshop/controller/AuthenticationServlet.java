@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Date;
 
 @WebServlet(name = "AuthenticationServlet", value = "/authentication")
 public class AuthenticationServlet extends HttpServlet {
@@ -50,6 +51,56 @@ public class AuthenticationServlet extends HttpServlet {
             case "login":
                 login(req, resp);
                 break;
+            case "signup":
+                signup(req, resp);
+                break;
+        }
+    }
+
+    private void signup(HttpServletRequest req, HttpServletResponse resp) {
+        String name = req.getParameter("name");
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+        String gender = req.getParameter("gender");
+        String dateOfBirth = req.getParameter("dateOfBirth");
+
+        String message = "";
+        if (name.isEmpty()) {
+            message = "x";
+            req.setAttribute("nameMessage", message);
+        }
+
+        if (username.length() < 8) {
+            message = "x";
+            req.setAttribute("usernameMessage", message);
+        }
+
+        if (password.length() < 8) {
+            message = "x";
+            req.setAttribute("passwordMessage", message);
+        }
+
+        if (gender == null) {
+            message = "x";
+            req.setAttribute("genderMessage", message);
+        }
+
+        if (dateOfBirth.isEmpty()) {
+            message = "x";
+            req.setAttribute("dateMessage", message);
+        }
+
+        if (message.isEmpty()) {
+            User signupUser = new User(name, username, password, gender, Date.valueOf(dateOfBirth));
+            dao.insertUser(signupUser);
+        }
+
+        RequestDispatcher dispatcher = req.getRequestDispatcher("authentication/signup.jsp");
+
+        try {
+            dispatcher.forward(req, resp);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

@@ -15,5 +15,6 @@
 
         <button type="submit">Login</button>
     </form>
+    <a href="/authentication?action=signup">You don't have account? Sign up here</a>
 </body>
 </html>
