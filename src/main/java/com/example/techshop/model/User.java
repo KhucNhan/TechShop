@@ -25,6 +25,14 @@ public class User {
         this.status = status;
     }
 
+    public User(String name, String username, String password, String gender, Date dateOfBirth) {
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
+    }
+
     public String getName() {
         return name;
     }
@@ -95,5 +103,20 @@ public class User {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userID=" + userID +
+                ", image='" + image + '\'' +
+                ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", gender='" + gender + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", role='" + role + '\'' +
+                ", status=" + status +
+                '}';
     }
 }
