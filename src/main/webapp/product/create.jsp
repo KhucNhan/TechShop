@@ -6,7 +6,7 @@
 <body>
 <h1>Create new product</h1>
 <h2>
-    <a href="products?action=users">List All Products</a>
+    <a href="products?action=users">Back to products</a>
 </h2>
 <form method="post">
     <label for="name">Name:</label>

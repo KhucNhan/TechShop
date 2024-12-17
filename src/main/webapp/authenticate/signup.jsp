@@ -5,7 +5,7 @@
     <title>Sign up</title>
 </head>
 <body>
-<form action="/authentication?action=signup" method="post">
+<form action="/authenticate?action=signup" method="post">
     <label for="name" style="<c:if test="${requestScope['nameMessage'] != null}"> color: red;</c:if>">Name: </label>
     <input type="text" id="name" name="name">
     <br>
@@ -37,6 +37,6 @@
 
     <button type="submit">Sign up</button>
 </form>
-<a href="/authentication?action=login">Back to login</a>
+<a href="/authenticate?action=login">Back to login</a>
 </body>
 </html>

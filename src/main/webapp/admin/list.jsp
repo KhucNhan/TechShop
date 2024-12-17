@@ -4,6 +4,12 @@
     <title>User Management</title>
 </head>
 <body>
+<h2>
+    <a href="/admins?action=create">Add new user</a>
+</h2>
+<h2>
+    <a href="/admins?action=products">Go to products</a>
+</h2>
 <div align="center">
     <table border="1" cellpadding="5">
         <caption><h2>List of User</h2></caption>
@@ -29,10 +35,10 @@
                 <td>${user.gender}</td>
                 <td>${user.dateOfBirth}</td>
                 <td>${user.role}</td>
-                <td>${user.status ? 'Active' : 'Unactive'}</td>
+                <td>${user.status ? 'Active' : 'Inactive'}</td>
                 <td>
-                    <a href="/products?action=edit&productID=${product.productID}">Edit</a>
-                    <a href="/products?action=delete&productID=${product.productID}">Delete</a>
+                    <a href="/admins?action=edit&userID=${user.userID}">Edit</a>
+                    <a href="/admins?action=delete&userID=${user.userID}">Delete</a>
                 </td>
             </tr>
         </c:forEach>

@@ -9,11 +9,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
 
-@WebServlet(name = "AuthenticationServlet", value = "/authentication")
-public class AuthenticationServlet extends HttpServlet {
+@WebServlet(name = "AuthenticationServlet", value = "/authenticate")
+public class AuthenticateServlet extends HttpServlet {
     private DAO dao;
 
     @Override
@@ -95,7 +96,7 @@ public class AuthenticationServlet extends HttpServlet {
             dao.insertUser(signupUser);
         }
 
-        RequestDispatcher dispatcher = req.getRequestDispatcher("authentication/signup.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("authenticate/signup.jsp");
 
         try {
             dispatcher.forward(req, resp);
@@ -111,6 +112,8 @@ public class AuthenticationServlet extends HttpServlet {
 
         try {
             if (currentUser != null) {
+                HttpSession session = req.getSession();
+
                 resp.sendRedirect("products");
             } else {
                 resp.sendRedirect("error-404.jsp");
@@ -121,7 +124,7 @@ public class AuthenticationServlet extends HttpServlet {
     }
 
     private void showSignUp(HttpServletRequest req, HttpServletResponse resp) {
-        RequestDispatcher dispatcher = req.getRequestDispatcher("authentication/signup.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("authenticate/signup.jsp");
         try {
             dispatcher.forward(req, resp);
         } catch (ServletException | IOException e) {
@@ -130,7 +133,7 @@ public class AuthenticationServlet extends HttpServlet {
     }
 
     private void showLogin(HttpServletRequest req, HttpServletResponse resp) {
-        RequestDispatcher dispatcher = req.getRequestDispatcher("authentication/login.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("authenticate/login.jsp");
         try {
             dispatcher.forward(req, resp);
         } catch (ServletException | IOException e) {

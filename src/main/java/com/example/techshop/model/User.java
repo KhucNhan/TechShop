@@ -25,6 +25,17 @@ public class User {
         this.status = status;
     }
 
+    public User(String image, String name, String username, String password, String gender, Date dateOfBirth, String role, boolean status) {
+        this.image = image;
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
+        this.role = role;
+        this.status = status;
+    }
+
     public User(String name, String username, String password, String gender, Date dateOfBirth) {
         this.name = name;
         this.username = username;
