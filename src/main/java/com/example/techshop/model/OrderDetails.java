@@ -2,16 +2,19 @@ package com.example.techshop.model;
 
 public class OrderDetails {
     private int orderDetailID;
-    private int orderID;
-    private int productID;
+    private Order order;
+    private Product product;
     private int quantity;
     private double price;
     private double totalPrice;
 
-    public OrderDetails(int orderDetailID, int orderID, int productID, int quantity, double price, double totalPrice) {
+    public OrderDetails() {
+    }
+
+    public OrderDetails(int orderDetailID, Order order, Product product, int quantity, double price, double totalPrice) {
         this.orderDetailID = orderDetailID;
-        this.orderID = orderID;
-        this.productID = productID;
+        this.order = order;
+        this.product = product;
         this.quantity = quantity;
         this.price = price;
         this.totalPrice = totalPrice;
@@ -25,20 +28,20 @@ public class OrderDetails {
         this.orderDetailID = orderDetailID;
     }
 
-    public int getOrderID() {
-        return orderID;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setOrderID(int orderID) {
-        this.orderID = orderID;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
-    public int getProductID() {
-        return productID;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductID(int productID) {
-        this.productID = productID;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public int getQuantity() {

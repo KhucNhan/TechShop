@@ -1,6 +1,7 @@
 package com.example.techshop.controller;
 
 import com.example.techshop.model.Product;
+import com.example.techshop.model.User;
 import com.example.techshop.service.DAO;
 
 import javax.servlet.RequestDispatcher;
@@ -9,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.List;
@@ -25,6 +27,10 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("text/html;charset=UTF-8");
+
         String action = req.getParameter("action");
 
         if (action == null) {
@@ -156,7 +162,16 @@ public class ProductServlet extends HttpServlet {
     private void showAllProducts(HttpServletRequest req, HttpServletResponse resp) {
         List<Product> products = dao.selectAllProducts();
         req.setAttribute("products", products);
-        RequestDispatcher dispatcher = req.getRequestDispatcher("product/list.jsp");
+        HttpSession session = req.getSession();
+        int userID = (Integer) session.getAttribute("currentUserID");
+        User user = dao.selectUser(userID);
+        RequestDispatcher dispatcher;
+
+        if (user.getRole().equalsIgnoreCase("admin")) {
+            dispatcher = req.getRequestDispatcher("product/list.jsp");
+        } else {
+            dispatcher = req.getRequestDispatcher("user/product.jsp");
+        }
         try {
             dispatcher.forward(req, resp);
         } catch (ServletException | IOException e) {
