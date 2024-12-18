@@ -38,10 +38,20 @@ public class AuthenticateServlet extends HttpServlet {
             case "signup":
                 showSignUp(req, resp);
                 break;
+            case "logout":
+                logout(req, resp);
+                break;
             default:
                 showLogin(req, resp);
                 break;
         }
+    }
+
+    private void logout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        HttpSession session = req.getSession();
+        session.invalidate();
+
+        resp.sendRedirect("authenticate/login.jsp");
     }
 
     @Override
