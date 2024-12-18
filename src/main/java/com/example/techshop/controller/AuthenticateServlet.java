@@ -24,6 +24,10 @@ public class AuthenticateServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("text/html;charset=UTF-8");
+
         String action = req.getParameter("action");
 
         if (action == null) {
@@ -113,7 +117,7 @@ public class AuthenticateServlet extends HttpServlet {
         try {
             if (currentUser != null) {
                 HttpSession session = req.getSession();
-
+                session.setAttribute("currentUserID", currentUser.getUserID());
                 resp.sendRedirect("products");
             } else {
                 resp.sendRedirect("error-404.jsp");
