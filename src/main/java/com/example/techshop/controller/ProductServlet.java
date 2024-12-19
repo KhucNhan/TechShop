@@ -184,6 +184,7 @@ public class ProductServlet extends HttpServlet {
         req.setAttribute("product", product);
 
         String mess = "";
+
         if(image.isEmpty()) {
             mess = "x";
             req.setAttribute("imageMessage", mess);
