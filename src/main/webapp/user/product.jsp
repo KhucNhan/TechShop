@@ -12,23 +12,23 @@
 <body>
 <jsp:include page="/menu.jsp"></jsp:include>
 
-<div class="container" style="margin-top: 50px;">
+<div class="container" style="margin-block: 30px;">
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-10">
-            <div class="row">
+            <div class="row g-4 text-center row-cols-5">
                 <c:forEach items="${requestScope['products']}" var="product">
-                    <div class="col-md-3">
-                        <div class="card">
-                            <img src="${product.image}" class="card-img-top" alt="">
+                    <div class="col">
+                        <div class="card shadow-lg border border-secondary">
+                            <img style="height: 23vh" src="${product.image}" class="card-img-top" alt="">
                             <div class="card-body">
-                                <h5 class="card-title text-truncate">${product.name}</h5>
+                                <h5 class="card-title text-truncate border-top border-secondary">${product.name}</h5>
                                 <p style="color: red" class="card-subtitle mb-2 text-body-secondary"><fmt:formatNumber
                                         value="${product.price}" pattern="#,###"/> VND</p>
                                     <%--                                <p style="font-size: 1rem;" class="card-text text-truncate">${product.description}</p>--%>
-                                <a href="" class="card-link mt-1">Details</a>
+                                <a href="/products?action=detail&productID=${product.productID}" class="card-link mt-1">Details</a>
                                 <br>
-                                <a href="/add-to-cart?productID=${product.productID}" class="btn btn-primary">Add to cart</a>
+                                <a href="/add-to-cart?productID=${product.productID}" class="btn btn-primary mt-1">Add to cart</a>
                             </div>
                         </div>
                     </div>

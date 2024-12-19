@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<nav style="background-color: lightgrey" class="navbar navbar-expand-lg bg-body-tertiary">
+<nav style="background-color: lightgrey" class="navbar navbar-expand-lg bg-body-tertiary mb-2">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="/products?action=#">
             <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="3rem" fill="currentColor" class="bi bi-laptop"
                  viewBox="0 0 16 16">
                 <path d="M13.5 3a.5.5 0 0 1 .5.5V11H2V3.5a.5.5 0 0 1 .5-.5zm-11-1A1.5 1.5 0 0 0 1 3.5V12h14V3.5A1.5 1.5 0 0 0 13.5 2zM0 12.5h16a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5"/>
@@ -15,13 +15,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#">Home</a>
+                    <a class="nav-link" aria-current="page" href="/products?action=#">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Phone</a>
+                    <a class="nav-link" href="/products?action=phone">Phone</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Laptop</a>
+                    <a class="nav-link" href="/products?action=laptop">Laptop</a>
                 </li>
                 <li style="position: relative; left: 50px;" class="nav-item align-items-center">
                     <form style="margin: 0" class="d-flex align-items-center" role="search">
