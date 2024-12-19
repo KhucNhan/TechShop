@@ -45,7 +45,12 @@
                                 <a class="btn btn-warning" href="/users?action=edit&userID=${user.userID}">Edit</a>
                             </td>
                             <td class="text-center">
-                                <a class="btn btn-danger" href="/users?action=delete&userID=${user.userID}">Delete</a>
+                                <c:if test="${user.status == true}">
+                                    <a class="btn btn-danger" href="/users?action=delete&userID=${user.userID}">Inactive</a>
+                                </c:if>
+                                <c:if test="${!user.status == true}">
+                                    <a class="btn btn-success" href="/users?action=active&userID=${user.userID}">Active</a>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>

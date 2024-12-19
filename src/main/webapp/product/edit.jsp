@@ -36,14 +36,6 @@
                 <label style="<c:if test="${requestScope['categoryIDMessage'] != null}"> color: red;</c:if>" for="categoryID">Category ID:</label>
                 <input type="number" id="categoryID" name="categoryID" value="${product.categoryID}"><br>
 
-                <label style="<c:if test="${requestScope['statusMessage'] != null}"> color: red;</c:if>">Status: </label>
-                <input type="radio" id="statusAvailable" name="status" value="true" ${product.status ? 'checked' : ''}>
-                <label for="statusAvailable">In stock</label>
-
-                <input type="radio" id="statusUnavailable" name="status" value="false" ${product.status ? 'checked' : ''}>
-                <label for="statusUnavailable">Out of stock</label>
-                <br>
-
                 <button type="submit">Update Product</button>
             </form>
         </div>

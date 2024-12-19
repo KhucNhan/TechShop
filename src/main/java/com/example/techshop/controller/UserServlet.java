@@ -1,5 +1,6 @@
 package com.example.techshop.controller;
 
+import com.example.techshop.model.Product;
 import com.example.techshop.model.User;
 import com.example.techshop.service.DAO;
 
@@ -44,6 +45,9 @@ public class UserServlet extends HttpServlet {
             case "delete":
                 showDeleteUser(req, resp);
                 break;
+            case "active":
+                showActiveUser(req, resp);
+                break;
             case "edit":
                 showUpdateUser(req, resp);
                 break;
@@ -56,6 +60,22 @@ public class UserServlet extends HttpServlet {
             default:
                 showAllUsers(req, resp);
                 break;
+        }
+    }
+
+    private void showActiveUser(HttpServletRequest req, HttpServletResponse resp) {
+        int id = Integer.parseInt(req.getParameter("userID"));
+        User user = dao.selectUser(id);
+        user.setStatus(true);
+        dao.updateUser(id, user);
+
+        List<User> users = dao.selectAllUsers();
+        req.setAttribute("users", users);
+        RequestDispatcher dispatcher = req.getRequestDispatcher("user/list.jsp");
+        try {
+            dispatcher.forward(req, resp);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

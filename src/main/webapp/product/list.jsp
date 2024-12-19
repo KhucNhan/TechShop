@@ -45,7 +45,12 @@
                                 <a class="btn btn-warning" href="/products?action=edit&productID=${product.productID}">Edit</a>
                             </td>
                             <td class="text-center">
-                                <a class="btn btn-danger" href="/products?action=delete&productID=${product.productID}">Delete</a>
+                                <c:if test="${product.status == true}">
+                                    <a class="btn btn-danger" href="/products?action=delete&productID=${product.productID}">Inactive</a>
+                                </c:if>
+                                <c:if test="${!product.status == true}">
+                                    <a class="btn btn-success" href="/products?action=active&productID=${product.productID}">Active</a>
+                                </c:if>
                             </td>
                         </tr>
                     </c:forEach>

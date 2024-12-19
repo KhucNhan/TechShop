@@ -54,6 +54,10 @@ public class AddToCartServlet extends HttpServlet {
                 List<Product> products = dao.selectAllProducts();
                 req.setAttribute("products", products);
                 req.setAttribute("productID", productID);
+
+                product.setStatus(false);
+                dao.updateProduct(productID, product);
+
                 req.getRequestDispatcher("web/product.jsp").forward(req, resp);
             } else {
                 orderDetails.setQuantity(orderDetails.getQuantity() + 1);

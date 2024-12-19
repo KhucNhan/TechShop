@@ -25,6 +25,7 @@ public interface IDAO {
     Product selectProduct(int id);
 
     List<Product> selectAllProducts();
+    List<Product> selectActiveProducts();
     List<Product> selectAllPhones();
     List<Product> selectAllLaptops();
 
