@@ -21,7 +21,7 @@
     <div class="row">
         
         <div class="col-md-12">
-            <form action="/admins?action=edit" method="post">
+            <form action="/users?action=edit" method="post">
                 <label for="image" style="<c:if test="${requestScope['imageMessage'] != null}"> color: red;</c:if>">Image: </label>
                 <input type="text" id="image" name="image" value="${user.image}">
                 <br>
@@ -32,10 +32,6 @@
 
                 <label for="username" style="<c:if test="${requestScope['usernameMessage'] != null}"> color: red;</c:if>">Username: </label>
                 <input type="text" id="username" name="username" value="${user.username}">
-                <br>
-
-                <label for="password" style="<c:if test="${requestScope['passwordMessage'] != null}"> color: red;</c:if>">Password: </label>
-                <input type="password" id="password" name="password" value="${user.password}">
                 <br>
 
                 <label style="<c:if test="${requestScope['genderMessage'] != null}"> color: red;</c:if>">

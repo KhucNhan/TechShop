@@ -21,7 +21,7 @@ public class CartServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher dispatcher = req.getRequestDispatcher("user/cart.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("web/cart.jsp");
         dispatcher.forward(req, resp);
     }
 
@@ -39,7 +39,7 @@ public class CartServlet extends HttpServlet {
                 List<Product> products = dao.selectAllProducts();
                 req.setAttribute("products", products);
 
-                RequestDispatcher dispatcher = req.getRequestDispatcher("user/product.jsp");
+                RequestDispatcher dispatcher = req.getRequestDispatcher("web/product.jsp");
                 dispatcher.forward(req, resp);
                 break;
         }

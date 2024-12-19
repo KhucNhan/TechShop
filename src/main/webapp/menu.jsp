@@ -49,8 +49,8 @@
                         </svg>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Update account</a></li>
-                        <li><a class="dropdown-item" href="#">Change password</a></li>
+                        <li><a class="dropdown-item" href="/users?action=updateInformation">Update account</a></li>
+                        <li><a class="dropdown-item" href="/users?action=changePassword">Change password</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>

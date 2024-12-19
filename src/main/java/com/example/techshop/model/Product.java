@@ -18,8 +18,27 @@ public class Product {
         this.categoryID = categoryID;
     }
 
+    public Product(String image, String name, String description, double price, int quantity, int categoryID) {
+        this.image = image;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+        this.categoryID = categoryID;
+    }
+
     public Product(int productID, String image, String name, String description, double price, int quantity, int categoryID, boolean status) {
         this.productID = productID;
+        this.image = image;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+        this.categoryID = categoryID;
+        this.status = status;
+    }
+
+    public Product(String image, String name, String description, double price, int quantity, int categoryID, boolean status) {
         this.image = image;
         this.name = name;
         this.description = description;

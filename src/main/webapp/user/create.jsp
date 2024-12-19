@@ -21,7 +21,7 @@
     <div class="row">
         
         <div class="col-md-12">
-            <form action="/admins?action=create" method="post">
+            <form action="/users?action=create" method="post">
                 <label for="name" style="<c:if test="${requestScope['nameMessage'] != null}"> color: red;</c:if>">Name: </label>
                 <input type="text" id="name" name="name">
                 <br>

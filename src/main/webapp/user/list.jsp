@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-md-12">
             <h2>
-                <a class="btn btn-primary" href="/admins?action=create">Add new user</a>
+                <a class="btn btn-primary" href="/users?action=create">Add new user</a>
             </h2>
             <div align="center">
                 <table border="1" cellpadding="5">
@@ -42,10 +42,10 @@
                             <td class="text-center">${user.role}</td>
                             <td class="text-center">${user.status ? 'Active' : 'Inactive'}</td>
                             <td class="text-center">
-                                <a class="btn btn-warning" href="/admins?action=edit&userID=${user.userID}">Edit</a>
+                                <a class="btn btn-warning" href="/users?action=edit&userID=${user.userID}">Edit</a>
                             </td>
                             <td class="text-center">
-                                <a class="btn btn-danger" href="/admins?action=delete&userID=${user.userID}">Delete</a>
+                                <a class="btn btn-danger" href="/users?action=delete&userID=${user.userID}">Delete</a>
                             </td>
                         </tr>
                     </c:forEach>

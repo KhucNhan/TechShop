@@ -13,7 +13,10 @@
     <div class="row">
         
         <div class="col-md-12">
-            <form method="post">
+            <form action="/products?action=create" method="post">
+                <label for="image">Image url:</label>
+                <input type="text" id="image" name="image"><br>
+
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name"><br>
 
