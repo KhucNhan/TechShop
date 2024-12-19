@@ -233,7 +233,7 @@ public class ProductServlet extends HttpServlet {
             return;
         }
 
-        if(String.valueOf(quantity).isEmpty()) {
+        if(String.valueOf(quantity).isEmpty() || quantity < 0) {
             mess = "x";
             req.setAttribute("quantityMessage", mess);
             RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");

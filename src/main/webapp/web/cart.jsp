@@ -36,12 +36,24 @@
                             <form class="d-inline" action="/cart?action=decreaseQuantity&productID=${cartItem.value.product.productID}" method="post">
                                 <button class="btn" type="submit">-</button>
                             </form>
-                            <form class="d-inline" action="/cart?action=changeQuantity&productID=${cartItem.value.product.productID}" method="post">
-                                <input type="number" value="${cartItem.value.quantity}">
+                            <form id="changeQuantity" class="d-inline" action="/cart?action=changeQuantity&productID=${cartItem.value.product.productID}" method="post">
+                                <input oninput="submitQuantity()" name="quantity" type="number" value="${cartItem.value.quantity}">
                             </form>
+
+                            <script>
+                                function submitQuantity() {
+                                    setTimeout(() => {
+                                        document.getElementById("changeQuantity").submit();
+                                    }, 1500);
+                                }
+                            </script>
+
                             <form class="d-inline" action="/cart?action=increaseQuantity&productID=${cartItem.value.product.productID}" method="post">
                                 <button class="btn" type="submit">+</button>
                             </form>
+                            <c:if test="${message != null}">
+                                <div style="color:red">${message}</div>
+                            </c:if>
                         </td>
                         <td><fmt:formatNumber value="${cartItem.value.product.price * cartItem.value.quantity}" pattern="#,###"/> VND</td>
                         <td>
