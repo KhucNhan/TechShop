@@ -56,6 +56,6 @@ public class AddToCartServlet extends HttpServlet {
 
         List<Product> products = dao.selectAllProducts();
         req.setAttribute("products", products);
-        req.getRequestDispatcher("user/product.jsp").forward(req, resp);
+        req.getRequestDispatcher("web/product.jsp").forward(req, resp);
     }
 }

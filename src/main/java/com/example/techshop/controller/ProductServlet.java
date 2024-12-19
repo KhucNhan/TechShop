@@ -70,7 +70,7 @@ public class ProductServlet extends HttpServlet {
         req.setAttribute("products", products);
 
         RequestDispatcher dispatcher;
-        dispatcher = req.getRequestDispatcher("user/product.jsp");
+        dispatcher = req.getRequestDispatcher("web/product.jsp");
 
         try {
             dispatcher.forward(req, resp);
@@ -84,7 +84,7 @@ public class ProductServlet extends HttpServlet {
         req.setAttribute("products", products);
 
         RequestDispatcher dispatcher;
-        dispatcher = req.getRequestDispatcher("user/product.jsp");
+        dispatcher = req.getRequestDispatcher("web/product.jsp");
 
         try {
             dispatcher.forward(req, resp);
@@ -179,10 +179,102 @@ public class ProductServlet extends HttpServlet {
         int quantity = Integer.parseInt(req.getParameter("quantity"));
         int categoryID = Integer.parseInt(req.getParameter("categoryID"));
         boolean status = Boolean.parseBoolean(req.getParameter("status"));
-        System.out.println(status);
 
-        Product product = new Product(id, image, name, description, price, quantity, categoryID, status);
+        Product product = dao.selectProduct(id);
+        req.setAttribute("product", product);
 
+        String mess = "";
+        if(image.isEmpty()) {
+            mess = "x";
+            req.setAttribute("imageMessage", mess);
+            RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+        }
+
+        if(name.isEmpty()) {
+            mess = "x";
+            req.setAttribute("nameMessage", mess);
+            RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+        }
+
+        if(description.isEmpty()) {
+            mess = "x";
+            req.setAttribute("descriptionMessage", mess);
+            RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+        }
+
+        if(String.valueOf(price).isEmpty()) {
+            mess = "x";
+            req.setAttribute("priceMessage", mess);
+            RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+        }
+
+        if(String.valueOf(quantity).isEmpty()) {
+            mess = "x";
+            req.setAttribute("quantityMessage", mess);
+            RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+        }
+
+        if(String.valueOf(categoryID).isEmpty()) {
+            mess = "x";
+            req.setAttribute("categoryIDMessage", mess);
+            RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+        }
+
+        if(String.valueOf(status).isEmpty()) {
+            mess = "x";
+            req.setAttribute("statusMessage", mess);
+            RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+        }
+
+
+        mess = "v";
+        req.setAttribute("success", mess);
+        product = new Product(image, name, description, price, quantity, categoryID);
+        dao.insertProductWithImage(product);
+
+        product.setStatus(false);
         dao.updateProduct(id, product);
         RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
         try {
@@ -193,14 +285,20 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void createProduct(HttpServletRequest req, HttpServletResponse resp) {
+        String image = req.getParameter("image");
         String name = req.getParameter("name");
         String description = req.getParameter("description");
         double price = Double.parseDouble(req.getParameter("price"));
         int quantity = Integer.parseInt(req.getParameter("quantity"));
         int categoryID = Integer.parseInt(req.getParameter("categoryID"));
 
-        Product product = new Product(name, description, price, quantity, categoryID);
-        dao.insertProduct(product);
+        if (!(image == null)) {
+            Product product = new Product(image, name, description, price, quantity, categoryID);
+            dao.insertProductWithImage(product);
+        } else {
+            Product product = new Product(name, description, price, quantity, categoryID);
+            dao.insertProduct(product);
+        }
         RequestDispatcher dispatcher = req.getRequestDispatcher("product/create.jsp");
         try {
             dispatcher.forward(req, resp);
@@ -220,7 +318,7 @@ public class ProductServlet extends HttpServlet {
         if (user.getRole().equalsIgnoreCase("admin")) {
             dispatcher = req.getRequestDispatcher("product/list.jsp");
         } else {
-            dispatcher = req.getRequestDispatcher("user/product.jsp");
+            dispatcher = req.getRequestDispatcher("web/product.jsp");
         }
         try {
             dispatcher.forward(req, resp);

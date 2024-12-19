@@ -18,7 +18,7 @@
           <a class="nav-link" href="/products?action=#">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/admins?action=products">Product</a>
+          <a class="nav-link" href="/users?action=products">Product</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/products?action=users">User</a>
@@ -49,8 +49,8 @@
             </svg>
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Update account</a></li>
-            <li><a class="dropdown-item" href="#">Change password</a></li>
+            <li><a class="dropdown-item" href="/users?action=updateInformation">Update account</a></li>
+            <li><a class="dropdown-item" href="/users?action=changePassword">Change password</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>

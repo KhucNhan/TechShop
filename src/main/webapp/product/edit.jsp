@@ -15,26 +15,35 @@
     <div class="row">
         
         <div class="col-md-12">
-            <form method="post">
-                <input type="hidden" name="productID" value="${product.productID}">
+            <form action="/products?action=edit&productID=${product.productID}" method="post">
+                <input style="<c:if test="${requestScope['imageMessage'] != null}"> color: red;</c:if>" type="hidden" name="productID" value="${product.productID}">
                 <label for="image">Image:</label>
                 <input type="text" id="image" name="image" value="${product.image}"><br>
-                <label for="name">Name:</label>
+
+                <label style="<c:if test="${requestScope['nameMessage'] != null}"> color: red;</c:if>" for="name">Name:</label>
                 <input type="text" id="name" name="name" value="${product.name}"><br>
-                <label for="description">Description:</label>
+
+                <label style="<c:if test="${requestScope['descriptionMessage'] != null}"> color: red;</c:if>" for="description">Description:</label>
                 <textarea id="description" name="description">${product.description}</textarea><br>
-                <label for="price">Price:</label>
+
+                <label style="<c:if test="${requestScope['priceMessage'] != null}"> color: red;</c:if>" for="price">Price:</label>
                 <input type="number" id="price" name="price" value="<fmt:formatNumber value="${product.price}" pattern="#.###"/>">
                 <label> VND</label><br>
-                <label for="quantity">Quantity:</label>
+
+                <label style="<c:if test="${requestScope['quantityMessage'] != null}"> color: red;</c:if>" for="quantity">Quantity:</label>
                 <input type="number" id="quantity" name="quantity" value="${product.quantity}"><br>
-                <label for="categoryID">Category ID:</label>
+
+                <label style="<c:if test="${requestScope['categoryIDMessage'] != null}"> color: red;</c:if>" for="categoryID">Category ID:</label>
                 <input type="number" id="categoryID" name="categoryID" value="${product.categoryID}"><br>
+
+                <label style="<c:if test="${requestScope['statusMessage'] != null}"> color: red;</c:if>">Status: </label>
                 <input type="radio" id="statusAvailable" name="status" value="true" ${product.status ? 'checked' : ''}>
                 <label for="statusAvailable">In stock</label>
 
                 <input type="radio" id="statusUnavailable" name="status" value="false" ${product.status ? 'checked' : ''}>
                 <label for="statusUnavailable">Out of stock</label>
+                <br>
+
                 <button type="submit">Update Product</button>
             </form>
         </div>

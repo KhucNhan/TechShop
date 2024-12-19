@@ -11,6 +11,7 @@ public class DAO implements IDAO {
     private final String jdbcURL = "jdbc:mysql://localhost:3306/techshop";
     private final String jdbcUsername = "root";
     private final String jdbcPassword = "nhan771026";
+    private static final String SELECT_INSERT_USER_STATUS = "select status from users where name = ?, username = ?, password = ?";
     private static final String SELECT_USER_BY_UP = "select * from users where username = ? and password = ?";
     private static final String INSERT_USERS_SQL = "INSERT INTO Users (name, username, password, gender, dateOfBirth) VALUES (?, ?, ?, ?, ?);";
     private static final String SELECT_USER_BY_ID = "select * from users where userID =?";
@@ -18,6 +19,7 @@ public class DAO implements IDAO {
     private static final String DELETE_USERS_SQL = "update users set status = false where userID = ?;";
     private static final String UPDATE_USERS_SQL = "update users set image = ?, name = ?, username = ?, password = ?, gender = ?, dateOfBirth = ? where userID = ?;";
 
+    private static final String SELECT_INSERT_PRODUCT_STATUS = "select status from products where name = ?";
     private static final String INSERT_PRODUCTS_SQL = "INSERT INTO Products (name, description, price, quantity, categoryID) VALUES (?, ?, ?, ?, ?);";
     private static final String INSERT_PRODUCTS_WITH_IMG_SQL = "INSERT INTO Products (image, name, description, price, quantity, categoryID) VALUES (?, ?, ?, ?, ?, ?);";
     private static final String SELECT_PRODUCT_BY_ID = "select * from products where productID =?";
@@ -43,15 +45,32 @@ public class DAO implements IDAO {
     @Override
     public boolean insertUser(User user) {
         connection = getConnection();
+        PreparedStatement preparedStatement;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USERS_SQL);
+            preparedStatement = connection.prepareStatement(SELECT_INSERT_USER_STATUS);
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getUsername());
             preparedStatement.setString(3, user.getPassword());
-            preparedStatement.setString(4, user.getGender());
-            preparedStatement.setString(5, user.getDateOfBirth().toString());
-            int row = preparedStatement.executeUpdate();
-            return row > 0;
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            boolean status = true;
+            if (resultSet.next()) {
+                status = resultSet.getBoolean(1);
+            }
+
+            int row = 0;
+            if (!status) {
+                preparedStatement = connection.prepareStatement(INSERT_USERS_SQL);
+                preparedStatement.setString(1, user.getName());
+                preparedStatement.setString(2, user.getUsername());
+                preparedStatement.setString(3, user.getPassword());
+                preparedStatement.setString(4, user.getGender());
+                preparedStatement.setString(5, user.getDateOfBirth().toString());
+                row = preparedStatement.executeUpdate();
+                return row > 0;
+            } else {
+                return false;
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -147,15 +166,30 @@ public class DAO implements IDAO {
     @Override
     public boolean insertProduct(Product product) {
         connection = getConnection();
+        PreparedStatement preparedStatement;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PRODUCTS_SQL);
+            preparedStatement = connection.prepareStatement(SELECT_INSERT_PRODUCT_STATUS);
             preparedStatement.setString(1, product.getName());
-            preparedStatement.setString(2, product.getDescription());
-            preparedStatement.setDouble(3, product.getPrice());
-            preparedStatement.setInt(4, product.getQuantity());
-            preparedStatement.setInt(5, product.getCategoryID());
-            int row = preparedStatement.executeUpdate();
-            return row > 0;
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            boolean status = true;
+            if (resultSet.next()) {
+                status = resultSet.getBoolean(1);
+            }
+
+            int row = 0;
+            if (!status) {
+                preparedStatement = connection.prepareStatement(INSERT_PRODUCTS_SQL);
+                preparedStatement.setString(1, product.getName());
+                preparedStatement.setString(2, product.getDescription());
+                preparedStatement.setDouble(3, product.getPrice());
+                preparedStatement.setInt(4, product.getQuantity());
+                preparedStatement.setInt(5, product.getCategoryID());
+                row = preparedStatement.executeUpdate();
+                return row > 0;
+            } else {
+                return false;
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -163,16 +197,31 @@ public class DAO implements IDAO {
 
     public boolean insertProductWithImage(Product product) {
         connection = getConnection();
+        PreparedStatement preparedStatement;
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PRODUCTS_WITH_IMG_SQL);
-            preparedStatement.setString(1, product.getImage());
-            preparedStatement.setString(2, product.getName());
-            preparedStatement.setString(3, product.getDescription());
-            preparedStatement.setDouble(4, product.getPrice());
-            preparedStatement.setInt(5, product.getQuantity());
-            preparedStatement.setInt(6, product.getCategoryID());
-            int row = preparedStatement.executeUpdate();
-            return row > 0;
+            preparedStatement = connection.prepareStatement(SELECT_INSERT_PRODUCT_STATUS);
+            preparedStatement.setString(1, product.getName());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            boolean status = true;
+            if (resultSet.next()) {
+                status = resultSet.getBoolean(1);
+            }
+
+            int row = 0;
+            if (!status) {
+                preparedStatement = connection.prepareStatement(INSERT_PRODUCTS_WITH_IMG_SQL);
+                preparedStatement.setString(1, product.getImage());
+                preparedStatement.setString(2, product.getName());
+                preparedStatement.setString(3, product.getDescription());
+                preparedStatement.setDouble(4, product.getPrice());
+                preparedStatement.setInt(5, product.getQuantity());
+                preparedStatement.setInt(6, product.getCategoryID());
+                row = preparedStatement.executeUpdate();
+                return row > 0;
+            } else {
+                return false;
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
