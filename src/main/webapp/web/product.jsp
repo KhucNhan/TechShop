@@ -13,7 +13,7 @@
 <body>
 <jsp:include page="/menu.jsp"></jsp:include>
 
-<div class="container" style="margin-block: 30px;">
+<div class="container" style="margin-bottom: 3vh; padding-top:11vh">
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-10">
