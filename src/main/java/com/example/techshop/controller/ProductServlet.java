@@ -50,9 +50,59 @@ public class ProductServlet extends HttpServlet {
             case "users":
                 goToUsers(req, resp);
                 break;
+            case "detail":
+                productDetail(req, resp);
+                break;
+            case "phone":
+                showPhones(req, resp);
+                break;
+            case "laptop":
+                showLaptops(req, resp);
+                break;
             default:
                 showAllProducts(req, resp);
                 break;
+        }
+    }
+
+    private void showLaptops(HttpServletRequest req, HttpServletResponse resp) {
+        List<Product> products = dao.selectAllLaptops();
+        req.setAttribute("products", products);
+
+        RequestDispatcher dispatcher;
+        dispatcher = req.getRequestDispatcher("user/product.jsp");
+
+        try {
+            dispatcher.forward(req, resp);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showPhones(HttpServletRequest req, HttpServletResponse resp) {
+        List<Product> products = dao.selectAllPhones();
+        req.setAttribute("products", products);
+
+        RequestDispatcher dispatcher;
+        dispatcher = req.getRequestDispatcher("user/product.jsp");
+
+        try {
+            dispatcher.forward(req, resp);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void productDetail(HttpServletRequest req, HttpServletResponse resp) {
+        int id = Integer.parseInt(req.getParameter("productID"));
+        Product product = dao.selectProduct(id);
+
+        req.setAttribute("product", product);
+        RequestDispatcher dispatcher = req.getRequestDispatcher("product/detail.jsp");
+        try {
+            dispatcher.forward(req, resp);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

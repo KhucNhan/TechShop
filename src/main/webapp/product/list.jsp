@@ -13,14 +13,12 @@
 
 <div class="container">
     <div class="row">
-        
         <div class="col-md-12">
             <h2>
                 <a class="btn btn-primary" href="/products?action=create">Add New Product</a>
             </h2>
             <div align="center">
                 <table border="1" cellpadding="5" class="col-md-10">
-                    <caption><h2>List of Product</h2></caption>
                     <tr>
                         <th class="text-center">#</th>
                         <th class="text-center" class="col-md-1">Image</th>

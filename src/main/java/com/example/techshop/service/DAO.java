@@ -24,6 +24,9 @@ public class DAO implements IDAO {
     private static final String SELECT_ALL_PRODUCTS = "select * from products";
     private static final String DELETE_PRODUCTS_SQL = "update products set status = false where productID = ?;";
     private static final String UPDATE_PRODUCTS_SQL = "update products set image = ?, name = ?, description = ?, price = ?, quantity = ?, categoryID = ?, status = ? where productID = ?;";
+    private static final String SELECT_ALL_PHONES = "select * from products where categoryID = 1";
+    private static final String SELECT_ALL_LAPTOPS = "select * from products where categoryID = 2";
+
 
     private Connection connection = null;
 
@@ -157,6 +160,7 @@ public class DAO implements IDAO {
             throw new RuntimeException(e);
         }
     }
+
     public boolean insertProductWithImage(Product product) {
         connection = getConnection();
         try {
@@ -245,14 +249,66 @@ public class DAO implements IDAO {
 
             while (resultSet.next()) {
                 products.add(new Product(
-                                resultSet.getInt("productID"),
-                                resultSet.getString("image"),
-                                resultSet.getString("name"),
-                                resultSet.getString("description"),
-                                resultSet.getDouble("price"),
-                                resultSet.getInt("quantity"),
-                                resultSet.getInt("categoryID"),
-                                resultSet.getBoolean("status")
+                        resultSet.getInt("productID"),
+                        resultSet.getString("image"),
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getDouble("price"),
+                        resultSet.getInt("quantity"),
+                        resultSet.getInt("categoryID"),
+                        resultSet.getBoolean("status")
+                ));
+            }
+            return products;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Product> selectAllPhones() {
+        connection = getConnection();
+        List<Product> products = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(SELECT_ALL_PHONES);
+
+            while (resultSet.next()) {
+                products.add(new Product(
+                        resultSet.getInt("productID"),
+                        resultSet.getString("image"),
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getDouble("price"),
+                        resultSet.getInt("quantity"),
+                        resultSet.getInt("categoryID"),
+                        resultSet.getBoolean("status")
+                ));
+            }
+            return products;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Product> selectAllLaptops() {
+        connection = getConnection();
+        List<Product> products = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(SELECT_ALL_LAPTOPS);
+
+            while (resultSet.next()) {
+                products.add(new Product(
+                        resultSet.getInt("productID"),
+                        resultSet.getString("image"),
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getDouble("price"),
+                        resultSet.getInt("quantity"),
+                        resultSet.getInt("categoryID"),
+                        resultSet.getBoolean("status")
                 ));
             }
             return products;

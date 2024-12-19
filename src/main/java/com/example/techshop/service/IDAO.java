@@ -25,6 +25,8 @@ public interface IDAO {
     Product selectProduct(int id);
 
     List<Product> selectAllProducts();
+    List<Product> selectAllPhones();
+    List<Product> selectAllLaptops();
 
     User checkLogin(String username, String password);
 }

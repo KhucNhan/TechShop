@@ -17,7 +17,6 @@
             </h2>
             <div align="center">
                 <table border="1" cellpadding="5">
-                    <caption><h2>List of User</h2></caption>
                     <tr>
                         <th class="text-center">#</th>
                         <th class="text-center" class="col-md-2">Image</th>
