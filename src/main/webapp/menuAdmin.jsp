@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<nav style="background-color: lightgrey" class="navbar navbar-expand-lg bg-body-tertiary mb-2">
+<nav style="background-color: lightgrey" class="navbar navbar-expand-lg fixed-top bg-body-tertiary mb-2">
   <div class="container-fluid">
     <a class="navbar-brand" href="/products?action=#">
       <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="3rem" fill="currentColor" class="bi bi-laptop"

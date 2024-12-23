@@ -1,6 +1,7 @@
 <%@ page import="com.example.techshop.service.DAO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -12,7 +13,7 @@
 <body>
 <jsp:include page="/menu.jsp"></jsp:include>
 
-<div class="container" style="margin-block: 30px;">
+<div class="container" style="margin-bottom: 3vh; padding-top:11vh">
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-10">
@@ -28,7 +29,13 @@
                                     <%--                                <p style="font-size: 1rem;" class="card-text text-truncate">${product.description}</p>--%>
                                 <a href="/products?action=detail&productID=${product.productID}" class="card-link mt-1">Details</a>
                                 <br>
-                                <a href="/add-to-cart?productID=${product.productID}" class="btn btn-primary mt-1">Add to cart</a>
+                                <c:if test="${!fn:contains(productID, product.productID)}">
+                                <a id="addToCartBtn" href="/add-to-cart?productID=${product.productID}" class="btn btn-primary mt-1">Add
+                                    to cart</a>
+                                </c:if>
+                                <c:if test="${fn:contains(productID, product.productID)}">
+                                    <button id="addToCartBtn" class="btn btn-primary mt-1" disabled>Out of stock</button>
+                                </c:if>
                             </div>
                         </div>
                     </div>

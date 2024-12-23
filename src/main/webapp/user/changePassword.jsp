@@ -9,7 +9,7 @@
 <body>
 <jsp:include page="/menu.jsp"></jsp:include>
 
-<div class="container" style="margin-top:80px">
+<div class="container" style="margin-bottom: 3vh; padding-top:11vh">
     <div class="row">
         <div class="col-md-12" style="align-items: center">
             <form style="margin-left: auto; margin-right: auto" action="/users?action=changePassword" method="post">

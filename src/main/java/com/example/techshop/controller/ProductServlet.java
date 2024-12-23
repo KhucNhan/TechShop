@@ -44,6 +44,9 @@ public class ProductServlet extends HttpServlet {
             case "delete":
                 showDeleteProduct(req, resp);
                 break;
+            case "active":
+                showActiveProduct(req, resp);
+                break;
             case "edit":
                 showUpdateProduct(req, resp);
                 break;
@@ -62,6 +65,22 @@ public class ProductServlet extends HttpServlet {
             default:
                 showAllProducts(req, resp);
                 break;
+        }
+    }
+
+    private void showActiveProduct(HttpServletRequest req, HttpServletResponse resp) {
+        int id = Integer.parseInt(req.getParameter("productID"));
+        Product product = dao.selectProduct(id);
+        product.setStatus(true);
+        dao.updateProduct(id, product);
+
+        List<Product> products = dao.selectAllProducts();
+        req.setAttribute("products", products);
+        RequestDispatcher dispatcher = req.getRequestDispatcher("product/list.jsp");
+        try {
+            dispatcher.forward(req, resp);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -108,7 +127,7 @@ public class ProductServlet extends HttpServlet {
 
     private void goToUsers(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            resp.sendRedirect("admins");
+            resp.sendRedirect("users");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -233,7 +252,7 @@ public class ProductServlet extends HttpServlet {
             return;
         }
 
-        if(String.valueOf(quantity).isEmpty()) {
+        if(String.valueOf(quantity).isEmpty() || quantity < 0) {
             mess = "x";
             req.setAttribute("quantityMessage", mess);
             RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
@@ -272,11 +291,13 @@ public class ProductServlet extends HttpServlet {
 
         mess = "v";
         req.setAttribute("success", mess);
-        product = new Product(image, name, description, price, quantity, categoryID);
-        dao.insertProductWithImage(product);
 
         product.setStatus(false);
         dao.updateProduct(id, product);
+
+        product = new Product(image, name, description, price, quantity, categoryID);
+        dao.insertProductWithImage(product);
+
         RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
         try {
             dispatcher.forward(req, resp);
@@ -309,16 +330,18 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void showAllProducts(HttpServletRequest req, HttpServletResponse resp) {
-        List<Product> products = dao.selectAllProducts();
-        req.setAttribute("products", products);
         HttpSession session = req.getSession();
         int userID = (Integer) session.getAttribute("currentUserID");
         User user = dao.selectUser(userID);
         RequestDispatcher dispatcher;
 
         if (user.getRole().equalsIgnoreCase("admin")) {
+            List<Product> products = dao.selectAllProducts();
+            req.setAttribute("products", products);
             dispatcher = req.getRequestDispatcher("product/list.jsp");
         } else {
+            List<Product> products = dao.selectActiveProducts();
+            req.setAttribute("products", products);
             dispatcher = req.getRequestDispatcher("web/product.jsp");
         }
         try {

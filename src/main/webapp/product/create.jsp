@@ -9,7 +9,7 @@
 <body>
 <jsp:include page="/menuAdmin.jsp"></jsp:include>
 
-<div class="container">
+<div class="container" style="margin-bottom: 3vh; padding-top:11vh">
     <div class="row">
         
         <div class="col-md-12">

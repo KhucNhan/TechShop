@@ -1,9 +1,14 @@
 package com.example.techshop.service;
 
+import com.example.techshop.model.Order;
+import com.example.techshop.model.OrderDetails;
 import com.example.techshop.model.Product;
 import com.example.techshop.model.User;
+import com.sun.org.apache.xpath.internal.operations.Or;
 
+import javax.servlet.http.HttpSession;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,18 +22,69 @@ public class DAO implements IDAO {
     private static final String SELECT_USER_BY_ID = "select * from users where userID =?";
     private static final String SELECT_ALL_USERS = "select * from users";
     private static final String DELETE_USERS_SQL = "update users set status = false where userID = ?;";
-    private static final String UPDATE_USERS_SQL = "update users set image = ?, name = ?, username = ?, password = ?, gender = ?, dateOfBirth = ? where userID = ?;";
+    private static final String UPDATE_USERS_SQL = "update users set image = ?, name = ?, username = ?, password = ?, gender = ?, dateOfBirth = ?, role = ?, status = ? where userID = ?;";
 
     private static final String SELECT_INSERT_PRODUCT_STATUS = "select status from products where name = ?";
     private static final String INSERT_PRODUCTS_SQL = "INSERT INTO Products (name, description, price, quantity, categoryID) VALUES (?, ?, ?, ?, ?);";
     private static final String INSERT_PRODUCTS_WITH_IMG_SQL = "INSERT INTO Products (image, name, description, price, quantity, categoryID) VALUES (?, ?, ?, ?, ?, ?);";
     private static final String SELECT_PRODUCT_BY_ID = "select * from products where productID =?";
     private static final String SELECT_ALL_PRODUCTS = "select * from products";
+    private static final String SELECT_ACTIVE_PRODUCTS = "select * from products where status = true";
     private static final String DELETE_PRODUCTS_SQL = "update products set status = false where productID = ?;";
     private static final String UPDATE_PRODUCTS_SQL = "update products set image = ?, name = ?, description = ?, price = ?, quantity = ?, categoryID = ?, status = ? where productID = ?;";
     private static final String SELECT_ALL_PHONES = "select * from products where categoryID = 1";
     private static final String SELECT_ALL_LAPTOPS = "select * from products where categoryID = 2";
 
+
+    private static final String INSERT_NEW_ORDER = "insert into orders (userID, orderDate, total) value (?, ?, ?)";
+    private static final String INSERT_NEW_ORDERDETAIL = "insert into orderdetails (orderID, productID, quantity, price, totalPrice) values (?, ?, ?, ?, ?)";
+
+    public int insertOrder(Order order) {
+        connection = getConnection();
+        PreparedStatement preparedStatement;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        ResultSet resultSet;
+        try {
+            preparedStatement = connection.prepareStatement(INSERT_NEW_ORDER, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1, order.getUserID());
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(currentDateTime));
+            preparedStatement.setDouble(3, order.getTotal());
+            int row = preparedStatement.executeUpdate();
+
+            resultSet = preparedStatement.getGeneratedKeys();
+
+            if (row != 0) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                } else {
+                    return 0;
+                }
+            } else {
+                return 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean insertOrderdetail(int orderID, OrderDetails orderDetails) {
+        connection = getConnection();
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement(INSERT_NEW_ORDERDETAIL);
+            preparedStatement.setInt(1, orderID);
+            preparedStatement.setInt(2, orderDetails.getProduct().getProductID());
+            preparedStatement.setInt(3, orderDetails.getQuantity());
+            preparedStatement.setDouble(4, orderDetails.getPrice());
+            preparedStatement.setDouble(5, orderDetails.getTotalPrice());
+            int row = preparedStatement.executeUpdate();
+
+            return row > 0;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private Connection connection = null;
 
@@ -100,7 +156,9 @@ public class DAO implements IDAO {
             preparedStatement.setString(4, user.getPassword());
             preparedStatement.setString(5, user.getGender());
             preparedStatement.setString(6, user.getDateOfBirth().toString());
-            preparedStatement.setInt(7, id);
+            preparedStatement.setString(7, user.getRole());
+            preparedStatement.setBoolean(8, user.isStatus());
+            preparedStatement.setInt(9, id);
             int row = preparedStatement.executeUpdate();
             return row > 0;
         } catch (SQLException e) {
@@ -295,6 +353,32 @@ public class DAO implements IDAO {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(SELECT_ALL_PRODUCTS);
+
+            while (resultSet.next()) {
+                products.add(new Product(
+                        resultSet.getInt("productID"),
+                        resultSet.getString("image"),
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getDouble("price"),
+                        resultSet.getInt("quantity"),
+                        resultSet.getInt("categoryID"),
+                        resultSet.getBoolean("status")
+                ));
+            }
+            return products;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Product> selectActiveProducts() {
+        connection = getConnection();
+        List<Product> products = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(SELECT_ACTIVE_PRODUCTS);
 
             while (resultSet.next()) {
                 products.add(new Product(

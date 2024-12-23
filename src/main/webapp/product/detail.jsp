@@ -11,7 +11,7 @@
 <body>
 <jsp:include page="/menu.jsp"></jsp:include>
 
-<div class="container">
+<div class="container" style="margin-bottom: 3vh; padding-top:11vh">
     <div class="row" style="height: 80vh">
         <div class="col-md-6 text-center" style="height: 80vh">
             <img class="mw-100 mh-100" style="height: 55vh;" src="${product.image}">

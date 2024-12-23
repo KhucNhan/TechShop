@@ -19,6 +19,7 @@ import java.util.Map;
 @WebServlet(name = "AddToCartServlet", value = "/add-to-cart")
 public class AddToCartServlet extends HttpServlet {
     private final DAO dao = new DAO();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int productID = Integer.parseInt(req.getParameter("productID"));
@@ -29,6 +30,7 @@ public class AddToCartServlet extends HttpServlet {
         Map<Integer, OrderDetails> cart;
 
         if (object == null) {
+
             OrderDetails orderDetails = new OrderDetails();
             orderDetails.setProduct(product);
             orderDetails.setQuantity(1);
@@ -48,6 +50,15 @@ public class AddToCartServlet extends HttpServlet {
                 orderDetails.setProduct(product);
                 orderDetails.setQuantity(1);
                 cart.put(productID, orderDetails);
+            } else if (product.getQuantity() == orderDetails.getQuantity()) {
+                List<Product> products = dao.selectAllProducts();
+                req.setAttribute("products", products);
+                req.setAttribute("productID", productID);
+
+                product.setStatus(false);
+                dao.updateProduct(productID, product);
+
+                req.getRequestDispatcher("web/product.jsp").forward(req, resp);
             } else {
                 orderDetails.setQuantity(orderDetails.getQuantity() + 1);
             }
