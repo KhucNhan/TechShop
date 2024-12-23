@@ -1,10 +1,14 @@
 package com.example.techshop.service;
 
+import com.example.techshop.model.Order;
+import com.example.techshop.model.OrderDetails;
 import com.example.techshop.model.Product;
 import com.example.techshop.model.User;
+import com.sun.org.apache.xpath.internal.operations.Or;
 
 import javax.servlet.http.HttpSession;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +35,56 @@ public class DAO implements IDAO {
     private static final String SELECT_ALL_PHONES = "select * from products where categoryID = 1";
     private static final String SELECT_ALL_LAPTOPS = "select * from products where categoryID = 2";
 
+
+    private static final String INSERT_NEW_ORDER = "insert into orders (userID, orderDate, total) value (?, ?, ?)";
+    private static final String INSERT_NEW_ORDERDETAIL = "insert into orderdetails (orderID, productID, quantity, price, totalPrice) values (?, ?, ?, ?, ?)";
+
+    public int insertOrder(Order order) {
+        connection = getConnection();
+        PreparedStatement preparedStatement;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        ResultSet resultSet;
+        try {
+            preparedStatement = connection.prepareStatement(INSERT_NEW_ORDER, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1, order.getUserID());
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(currentDateTime));
+            preparedStatement.setDouble(3, order.getTotal());
+            int row = preparedStatement.executeUpdate();
+
+            resultSet = preparedStatement.getGeneratedKeys();
+
+            if (row != 0) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                } else {
+                    return 0;
+                }
+            } else {
+                return 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean insertOrderdetail(int orderID, OrderDetails orderDetails) {
+        connection = getConnection();
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement(INSERT_NEW_ORDERDETAIL);
+            preparedStatement.setInt(1, orderID);
+            preparedStatement.setInt(2, orderDetails.getProduct().getProductID());
+            preparedStatement.setInt(3, orderDetails.getQuantity());
+            preparedStatement.setDouble(4, orderDetails.getPrice());
+            preparedStatement.setDouble(5, orderDetails.getTotalPrice());
+            int row = preparedStatement.executeUpdate();
+
+            return row > 0;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private Connection connection = null;
 

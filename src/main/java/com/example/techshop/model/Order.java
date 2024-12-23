@@ -9,6 +9,9 @@ public class Order {
     private double total;
     private String status;
 
+    public Order() {
+    }
+
     public int getOrderID() {
         return orderID;
     }

@@ -1,8 +1,10 @@
 package com.example.techshop.controller;
 
+import com.example.techshop.model.Order;
 import com.example.techshop.model.OrderDetails;
 import com.example.techshop.model.Product;
 import com.example.techshop.service.DAO;
+import com.sun.org.apache.xpath.internal.operations.Or;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +52,78 @@ public class CartServlet extends HttpServlet {
             case "changeQuantity":
                 changeQuantity(req, resp);
                 break;
+            case "selected":
+                setSelected(req, resp);
+                break;
+            case "buy":
+                buy(req, resp);
+                break;
+        }
+    }
+
+    private void buy(HttpServletRequest req, HttpServletResponse resp) {
+        HttpSession session = req.getSession();
+        Map<Integer, OrderDetails> cart = (Map<Integer, OrderDetails>) session.getAttribute("cart");
+
+
+
+        Order order = new Order();
+        order.setUserID((Integer) session.getAttribute("currentUserID"));
+        order.setTotal(sendTotal(req, resp));
+        int orderID = dao.insertOrder(order);
+
+        Iterator<Map.Entry<Integer, OrderDetails>> iterator = cart.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Integer, OrderDetails> cartItem = iterator.next();
+
+            if (cartItem.getValue().getProduct().isSelected()) {
+                cartItem.getValue().setTotalPrice(cartItem.getValue().getQuantity() * cartItem.getValue().getPrice());
+                dao.insertOrderdetail(orderID, cartItem.getValue());
+                iterator.remove();
+            }
+        }
+
+
+        session.setAttribute("cart", cart);
+
+        RequestDispatcher dispatcher = req.getRequestDispatcher("web/cart.jsp");
+        try {
+            dispatcher.forward(req, resp);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private double sendTotal(HttpServletRequest req, HttpServletResponse resp) {
+        HttpSession session = req.getSession();
+        Map<Integer, OrderDetails> cart = (Map<Integer, OrderDetails>) session.getAttribute("cart");
+        double total = 0;
+
+        for(Map.Entry<Integer, OrderDetails> cartItem : cart.entrySet()) {
+            if (cartItem.getValue().getProduct().isSelected()) {
+                total += cartItem.getValue().getQuantity() * cartItem.getValue().getPrice();
+            }
+        }
+        return total;
+    }
+
+    private void setSelected(HttpServletRequest req, HttpServletResponse resp) {
+        HttpSession session = req.getSession();
+        Map<Integer, OrderDetails> cart = (Map<Integer, OrderDetails>) session.getAttribute("cart");
+        int productID = Integer.parseInt(req.getParameter("productID"));
+
+        cart.get(productID).getProduct().setSelected(!cart.get(productID).getProduct().isSelected());
+
+        double total = sendTotal(req, resp);
+        req.setAttribute("total", total);
+
+        session.setAttribute("cart", cart);
+
+        RequestDispatcher dispatcher = req.getRequestDispatcher("web/cart.jsp");
+        try {
+            dispatcher.forward(req, resp);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -75,7 +150,9 @@ public class CartServlet extends HttpServlet {
 
         orderDetails.setQuantity(quantity);
 
-        cart.replace(productID, orderDetails);
+        double total = sendTotal(req, resp);
+        req.setAttribute("total", total);
+
         session.setAttribute("cart", cart);
 
         RequestDispatcher dispatcher = req.getRequestDispatcher("web/cart.jsp");
@@ -116,7 +193,8 @@ public class CartServlet extends HttpServlet {
                 break;
         }
 
-        cart.replace(productID, orderDetails);
+        double total = sendTotal(req, resp);
+        req.setAttribute("total", total);
         session.setAttribute("cart", cart);
         
         RequestDispatcher dispatcher = req.getRequestDispatcher("web/cart.jsp");

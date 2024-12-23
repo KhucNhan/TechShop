@@ -9,6 +9,7 @@ public class Product {
     private int quantity;
     private int categoryID;
     private boolean status;
+    private boolean selected;
 
     public Product(String name, String description, double price, int quantity, int categoryID) {
         this.name = name;
@@ -16,6 +17,7 @@ public class Product {
         this.price = price;
         this.quantity = quantity;
         this.categoryID = categoryID;
+        this.selected = false;
     }
 
     public Product(String image, String name, String description, double price, int quantity, int categoryID) {
@@ -36,6 +38,7 @@ public class Product {
         this.quantity = quantity;
         this.categoryID = categoryID;
         this.status = status;
+        this.selected = false;
     }
 
     public Product(String image, String name, String description, double price, int quantity, int categoryID, boolean status) {
@@ -46,6 +49,15 @@ public class Product {
         this.quantity = quantity;
         this.categoryID = categoryID;
         this.status = status;
+        this.selected = false;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     public String getImage() {
