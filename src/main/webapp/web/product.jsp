@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body>
+<body style="background-color: #FFF7D1">
 <jsp:include page="/menu.jsp"></jsp:include>
 
 <div class="container" style="margin-bottom: 3vh; padding-top:11vh">
