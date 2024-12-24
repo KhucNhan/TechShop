@@ -130,9 +130,12 @@ public class AuthenticateServlet extends HttpServlet {
                 session.setAttribute("currentUserID", currentUser.getUserID());
                 resp.sendRedirect("products");
             } else {
-                resp.sendRedirect("error-404.jsp");
+                req.setAttribute("message", "Password incorrect or username doesn't exist.");
+                req.getRequestDispatcher("authenticate/login.jsp").forward(req, resp);
             }
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ServletException e) {
             throw new RuntimeException(e);
         }
     }

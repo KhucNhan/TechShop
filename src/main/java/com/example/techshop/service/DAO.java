@@ -38,7 +38,117 @@ public class DAO implements IDAO {
 
     private static final String INSERT_NEW_ORDER = "insert into orders (userID, orderDate, total) value (?, ?, ?)";
     private static final String INSERT_NEW_ORDERDETAIL = "insert into orderdetails (orderID, productID, quantity, price, totalPrice) values (?, ?, ?, ?, ?)";
+    private static final String SELECT_ALL_ORDERS = "select * from orders";
+    private static final String SELECT_ORDER = "select * from orders where orderId = ?";
+    private static final String SELECT_ORDERS_BY_USERID = "select * from orders where userID = ?";
 
+    private static final String UPDATE_ORDER = "update orders set userID = ?, orderDate = ?, total = ?, status = ? where orderID = ?";
+
+    @Override
+    public Order selectOrder(int orderID) {
+        connection = getConnection();
+        PreparedStatement preparedStatement;
+        List<Order> orders = new ArrayList<>();
+        try {
+            preparedStatement = connection.prepareStatement(SELECT_ORDER);
+            preparedStatement.setInt(1, orderID);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return new Order(
+                        resultSet.getInt(1),
+                        resultSet.getInt(2),
+                        resultSet.getTimestamp(3),
+                        resultSet.getDouble(4),
+                        resultSet.getString(5)
+                );
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Order> selectAllOrders() {
+        connection = getConnection();
+        PreparedStatement preparedStatement;
+        List<Order> orders = new ArrayList<>();
+        try {
+            preparedStatement = connection.prepareStatement(SELECT_ALL_ORDERS);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                orders.add(new Order(
+                        resultSet.getInt(1),
+                        resultSet.getInt(2),
+                        resultSet.getTimestamp(3),
+                        resultSet.getDouble(4),
+                        resultSet.getString(5)
+                ));
+            }
+
+            if (orders.isEmpty()) {
+                return null;
+            } else {
+                return orders;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Order> selectAllOrdersByUser(int userID) {
+        connection = getConnection();
+        PreparedStatement preparedStatement;
+        List<Order> orders = new ArrayList<>();
+        try {
+            preparedStatement = connection.prepareStatement(SELECT_ORDERS_BY_USERID);
+            preparedStatement.setInt(1, userID);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                orders.add(new Order(
+                        resultSet.getInt(1),
+                        resultSet.getInt(2),
+                        resultSet.getTimestamp(3),
+                        resultSet.getDouble(4),
+                        resultSet.getString(5)
+                ));
+            }
+
+            if (orders.isEmpty()) {
+                return null;
+            } else {
+                return orders;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean updateOrder(int orderID, Order order) {
+        connection = getConnection();
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement(UPDATE_ORDER);
+            preparedStatement.setInt(5, order.getOrderID());
+            preparedStatement.setInt(1, order.getUserID());
+            preparedStatement.setTimestamp(2, (Timestamp) order.getOrderDate());
+            preparedStatement.setDouble(3, order.getTotal());
+            preparedStatement.setString(4, order.getStatus());
+            int row = preparedStatement.executeUpdate();
+
+            return row > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public int insertOrder(Order order) {
         connection = getConnection();
         PreparedStatement preparedStatement;
@@ -67,6 +177,7 @@ public class DAO implements IDAO {
         }
     }
 
+    @Override
     public boolean insertOrderdetail(int orderID, OrderDetails orderDetails) {
         connection = getConnection();
         PreparedStatement preparedStatement;
