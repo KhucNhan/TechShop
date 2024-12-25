@@ -53,4 +53,8 @@ public interface IDAO {
     List<OrderDetails> selectOrderdetailsByOrderID(int orderID);
 
     boolean insertUserWithImage(User user);
+    List<Product> userSearchProduct(String value);
+    List<Product> adminSearchProduct(String value);
+    List<User> searchUserByName(String value);
+
 }

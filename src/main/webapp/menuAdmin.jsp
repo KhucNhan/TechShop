@@ -27,10 +27,11 @@
           <a class="nav-link" href="orders">Order</a>
         </li>
         <li style="position: relative; left: 100px;" class="nav-item align-items-center">
-          <form style="margin: 0" class="d-flex align-items-center" role="search">
+          <form action="/search" style="margin: 0" class="d-flex align-items-center" role="search">
             <input style="width: 40rem; background-color: lightgrey; border:1px solid black"
                    class="form-control me-2" type="search" placeholder="Search"
-                   aria-label="Search">
+                   aria-label="Search" name="value">
+              <input name="servletPath" hidden="hidden" value="${pageContext.request.servletPath}">
             <button class="btn btn-success" type="submit">Search</button>
           </form>
         </li>

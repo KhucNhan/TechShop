@@ -8,7 +8,7 @@
     <title>Change Password</title>
 </head>
 <body>
-<jsp:include page="/menu.jsp"></jsp:include>
+<jsp:include page="${user.role == 'admin' ? '/menuAdmin.jsp' : '/menu.jsp'}"/>
 
 <div class="container" style="margin-bottom: 3vh; padding-top:11vh">
     <div class="row">
