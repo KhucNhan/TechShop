@@ -13,12 +13,15 @@ public class DAO implements IDAO {
     private final String jdbcURL = "jdbc:mysql://localhost:3306/techshop?useUnicode=true&characterEncoding=UTF-8";
     private final String jdbcUsername = "root";
     private final String jdbcPassword = "nhan771026";
+    private static final String USER_SELECT_PRODUCT_BY_NAME = "select * from products where name like ? and status = true";
+    private static final String SELECT_PRODUCT_BY_NAME = "select * from products where name like ?";
     private static final String SELECT_INSERT_USER_STATUS = "select status from users where name = ? and username = ? and password = ?";
     private static final String SELECT_USER_BY_UP = "select * from users where username = ? and password = ?";
     private static final String INSERT_USERS_SQL = "INSERT INTO Users (name, username, password, gender, dateOfBirth) VALUES (?, ?, ?, ?, ?);";
     private static final String INSERT_USER_WITH_IMAGE_SQL = "INSERT INTO Users (image, name, username, password, gender, dateOfBirth) VALUES (?, ?, ?, ?, ?, ?);";
     private static final String SELECT_USER_BY_ID = "select * from users where userID =?";
     private static final String SELECT_ALL_USERS = "select * from users";
+    private static final String SEARCH_USERS = "select * from users where name like ?";
     private static final String DELETE_USERS_SQL = "update users set status = false where userID = ?;";
     private static final String UPDATE_USERS_SQL = "update users set image = ?, name = ?, username = ?, password = ?, gender = ?, dateOfBirth = ?, role = ?, status = ? where userID = ?;";
 
@@ -56,8 +59,8 @@ public class DAO implements IDAO {
 
             while (resultSet.next()) {
                 categories.add(new Category(
-                   resultSet.getInt(1),
-                   resultSet.getString(2)
+                        resultSet.getInt(1),
+                        resultSet.getString(2)
                 ));
             }
 
@@ -429,6 +432,34 @@ public class DAO implements IDAO {
     }
 
     @Override
+    public List<User> searchUserByName(String value) {
+        connection = getConnection();
+        List<User> users = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(SEARCH_USERS);
+            preparedStatement.setString(1, "%" + value + "%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                users.add(new User(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getString(5),
+                        resultSet.getString(6),
+                        resultSet.getDate(7),
+                        resultSet.getString(8),
+                        resultSet.getBoolean(9)
+                ));
+            }
+            return users;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public boolean insertProduct(Product product) {
         connection = getConnection();
         PreparedStatement preparedStatement;
@@ -574,6 +605,60 @@ public class DAO implements IDAO {
                 ));
             }
             return products;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Product> userSearchProduct(String value) {
+        connection = getConnection();
+        List<Product> searchProducts = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(USER_SELECT_PRODUCT_BY_NAME);
+            preparedStatement.setString(1, "%" + value + "%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                searchProducts.add(new Product(
+                        resultSet.getInt("productID"),
+                        resultSet.getString("image"),
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getDouble("price"),
+                        resultSet.getInt("quantity"),
+                        resultSet.getInt("categoryID"),
+                        resultSet.getBoolean("status")
+                ));
+            }
+            return searchProducts;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<Product> adminSearchProduct(String value) {
+        connection = getConnection();
+        List<Product> searchProducts = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PRODUCT_BY_NAME);
+            preparedStatement.setString(1, "%" + value + "%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                searchProducts.add(new Product(
+                        resultSet.getInt("productID"),
+                        resultSet.getString("image"),
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getDouble("price"),
+                        resultSet.getInt("quantity"),
+                        resultSet.getInt("categoryID"),
+                        resultSet.getBoolean("status")
+                ));
+            }
+            return searchProducts;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
