@@ -12,7 +12,30 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/css/menu_footer.css">
     <title>Edit user</title>
+    <style>
+        .container  span, label {
+            width: 20%;
+        }
+
+        .container  input, select {
+            width: 70%;
+        }
+
+        .container  form {
+            width: 100%;
+            text-align: center;
+            background-color: #4B5563;
+            border: 2px solid #3B82F6;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .container  .row {
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
 <jsp:include page="/menuAdmin.jsp"></jsp:include>
@@ -20,62 +43,77 @@
 <div class="container" style="margin-bottom: 3vh; padding-top:11vh">
     <div class="row">
         
-        <div class="col-md-12">
+        <div class="col-md-6">
             <form action="/users?action=edit" method="post">
-                <label for="image" style="<c:if test="${requestScope['imageMessage'] != null}"> color: red;</c:if>">Image: </label>
-                <input type="text" id="image" name="image" value="${user.image}">
-                <br>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Image</span>
+                    <input value="${user.image}" name="image" type="text" class="form-control" placeholder="Image url"
+                           aria-label="Image url" aria-describedby="basic-addon1">
+                </div>
 
-                <label for="name" style="<c:if test="${requestScope['nameMessage'] != null}"> color: red;</c:if>">Name: </label>
-                <input type="text" id="name" name="name" value="${user.name}">
-                <br>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon2">Name</span>
+                    <input value="${user.name}" name="name" type="text" class="form-control" placeholder="Name"
+                           aria-label="Name" aria-describedby="basic-addon1">
+                </div>
 
-                <label for="username" style="<c:if test="${requestScope['usernameMessage'] != null}"> color: red;</c:if>">Username: </label>
-                <input type="text" id="username" name="username" value="${user.username}">
-                <br>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon3">Username</span>
+                    <input value="${user.username}" name="username" type="text" class="form-control"
+                           placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
 
-                <label style="<c:if test="${requestScope['genderMessage'] != null}"> color: red;</c:if>">
-                    Gender:
-                </label>
-                <input type="radio" id="male" name="gender" value="Male" ${user.gender.equalsIgnoreCase("Male") ? 'checked' : ''}>
-                <label for="male">Male</label>
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">Gender</label>
+                    <select class="form-select" id="inputGroupSelect01" name="gender">
+                        <option ${user.gender == 'Male' ? 'selected' : ''} value="Male">Male</option>
+                        <option ${user.gender == 'Female' ? 'selected' : ''} value="Female">Female</option>
+                        <option ${user.gender == 'Other' ? 'selected' : ''} value="Other">Other</option>
+                    </select>
+                </div>
 
-                <input type="radio" id="female" name="gender" value="Female" ${user.gender.equalsIgnoreCase("Female") ? 'checked' : ''}>
-                <label for="female">Female</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon4">Date of birth</span>
+                    <input value="${user.dateOfBirth}" name="dateOfBirth" type="date" class="form-control"
+                           placeholder="Date of birth" aria-label="Date of birth" aria-describedby="basic-addon1">
+                </div>
 
-                <input type="radio" id="other" name="gender" value="Other" ${user.gender.equalsIgnoreCase("Other") ? 'checked' : ''}>
-                <label for="other">Other</label>
-                <br>
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">Role</label>
+                    <select class="form-select" id="inputGroupSelect02" name="role">
+                        <option ${user.role == 'admin' ? 'selected' : ''} value="admin">Admin</option>
+                        <option ${user.role == 'user' ? 'selected' : ''} value="user">User</option>
+                    </select>
+                </div>
 
-                <label for="dateOfBirth" style="<c:if test="${requestScope['dateMessage'] != null}"> color: red;</c:if>">Date of birth: </label>
-                <input type="date" name="dateOfBirth" id="dateOfBirth" value="${user.dateOfBirth}">
-                <br>
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">Status</label>
+                    <select class="form-select" id="inputGroupSelect03" name="status">
+                        <option ${user.status ? 'selected' : ''} value="true">Active</option>
+                        <option ${user.status ? '' : 'selected'} value="false">Inactive</option>
+                    </select>
+                </div>
 
-                <label style="<c:if test="${requestScope['roleMessage'] != null}"> color: red;</c:if>">
-                    Role:
-                </label>
-                <input type="radio" id="admin" name="role" value="Admin" ${user.role.equalsIgnoreCase("Admin") ? 'checked' : ''}>
-                <label for="admin">Admin</label>
+                <input type="hidden" name="userID" value="${user.userID}">
+                <input type="hidden" name="password" value="${user.password}">
 
-                <input type="radio" id="user" name="role" value="User" ${user.role.equalsIgnoreCase("User") ? 'checked' : ''}>
-                <label for="user">User</label>
-                <br>
-
-                <label style="<c:if test="${requestScope['statusMessage'] != null}"> color: red;</c:if>">
-                    Status:
-                </label>
-                <input type="radio" id="active" name="status" value="Active" ${user.status ? 'checked' : ''}>
-                <label for="active">Active</label>
-
-                <input type="radio" id="inactive" name="status" value="Inactive" ${user.status ? '' : 'checked'}>
-                <label for="inactive">Inactive</label>
-                <br>
-
-                <button type="submit">Sign up</button>
+                <button class="btn btn-primary" type="submit">Update</button>
             </form>
         </div>
         
     </div>
 </div>
+
+<% String message = (String) request.getAttribute("message");
+    String alertType = (String) request.getAttribute("alertType");
+%>
+
+<% if (message != null) { %>
+<div style="position: fixed; top: 80px; left: 20px; z-index: 1050; width: auto;" class="alert alert-<%= alertType %> alert-dismissible fade show" role="alert">
+    <%= message %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<% } %>
+
 </body>
 </html>

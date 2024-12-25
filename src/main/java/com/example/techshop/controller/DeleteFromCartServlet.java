@@ -29,6 +29,7 @@ public class DeleteFromCartServlet extends HttpServlet {
             Map<Integer, OrderDetails> cart = (Map<Integer, OrderDetails>) object;
             cart.remove(productID);
             session.setAttribute("cart", cart);
+            session.setAttribute("cartItemCount", cart.size());
         }
         resp.sendRedirect(req.getContextPath() + "/cart");
     }

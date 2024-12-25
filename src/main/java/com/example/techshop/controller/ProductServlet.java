@@ -1,5 +1,6 @@
 package com.example.techshop.controller;
 
+import com.example.techshop.model.Category;
 import com.example.techshop.model.Product;
 import com.example.techshop.model.User;
 import com.example.techshop.service.DAO;
@@ -138,6 +139,8 @@ public class ProductServlet extends HttpServlet {
         Product product = dao.selectProduct(id);
 
         req.setAttribute("product", product);
+        List<Category> categories = dao.selectAllCategories();
+        req.setAttribute("categories", categories);
         RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
         try {
             dispatcher.forward(req, resp);
@@ -161,6 +164,8 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void showCreateProduct(HttpServletRequest req, HttpServletResponse resp) {
+        List<Category> categories = dao.selectAllCategories();
+        req.setAttribute("categories", categories);
         RequestDispatcher dispatcher = req.getRequestDispatcher("product/create.jsp");
         try {
             dispatcher.forward(req, resp);
@@ -202,83 +207,26 @@ public class ProductServlet extends HttpServlet {
         Product product = dao.selectProduct(id);
         req.setAttribute("product", product);
 
-        String mess = "";
+        String mess = "Not null requirement";
 
-        if(image.isEmpty()) {
-            mess = "x";
-            req.setAttribute("imageMessage", mess);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
-            try {
-                dispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
+        if (checkNullInput(req, resp, image, mess)) return;
 
-        if(name.isEmpty()) {
-            mess = "x";
-            req.setAttribute("nameMessage", mess);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
-            try {
-                dispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
+        if (checkNullInput(req, resp, name, mess)) return;
 
-        if(description.isEmpty()) {
-            mess = "x";
-            req.setAttribute("descriptionMessage", mess);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
-            try {
-                dispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
+        if (checkNullInput(req, resp, description, mess)) return;
 
-        if(String.valueOf(price).isEmpty()) {
-            mess = "x";
-            req.setAttribute("priceMessage", mess);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
-            try {
-                dispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
+        if (checkNullInput(req, resp, String.valueOf(price), mess)) return;
+
+        if (checkNullInput(req, resp, String.valueOf(categoryID), mess)) return;
+
+        if (checkNullInput(req, resp, String.valueOf(status), mess)) return;
+
 
         if(String.valueOf(quantity).isEmpty() || quantity < 0) {
-            mess = "x";
-            req.setAttribute("quantityMessage", mess);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
-            try {
-                dispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
-
-        if(String.valueOf(categoryID).isEmpty()) {
-            mess = "x";
-            req.setAttribute("categoryIDMessage", mess);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
-            try {
-                dispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
-
-        if(String.valueOf(status).isEmpty()) {
-            mess = "x";
-            req.setAttribute("statusMessage", mess);
+            req.setAttribute("message", "Not null and invalidate number requirement");
+            req.setAttribute("alertType", "alert");
+            List<Category> categories = dao.selectAllCategories();
+            req.setAttribute("categories", categories);
             RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
             try {
                 dispatcher.forward(req, resp);
@@ -289,8 +237,9 @@ public class ProductServlet extends HttpServlet {
         }
 
 
-        mess = "v";
-        req.setAttribute("success", mess);
+        mess = "Update product success";
+        req.setAttribute("message", mess);
+        req.setAttribute("alertType", "success");
 
         product.setStatus(false);
         dao.updateProduct(id, product);
@@ -306,21 +255,66 @@ public class ProductServlet extends HttpServlet {
         }
     }
 
+    private boolean checkNullInput(HttpServletRequest req, HttpServletResponse resp, String input, String mess) {
+        if(input.isEmpty()) {
+            req.setAttribute("message", mess);
+            req.setAttribute("alertType", "alert");
+            RequestDispatcher dispatcher = req.getRequestDispatcher("product/edit.jsp");
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return true;
+        }
+        return false;
+    }
+
     private void createProduct(HttpServletRequest req, HttpServletResponse resp) {
         String image = req.getParameter("image");
         String name = req.getParameter("name");
         String description = req.getParameter("description");
+        String priceStr = req.getParameter("price");
+        String quantityStr = req.getParameter("quantity");
         double price = Double.parseDouble(req.getParameter("price"));
         int quantity = Integer.parseInt(req.getParameter("quantity"));
         int categoryID = Integer.parseInt(req.getParameter("categoryID"));
 
-        if (!(image == null)) {
+        if(categoryID == 0 || name.isEmpty() || description.isEmpty() || priceStr.isEmpty() || quantityStr.isEmpty()) {
+            req.setAttribute("message", "Not null requirement.");
+            req.setAttribute("alertType", "warning");
+            List<Category> categories = dao.selectAllCategories();
+            req.setAttribute("categories", categories);
+            RequestDispatcher dispatcher = req.getRequestDispatcher("product/create.jsp");
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+        }
+
+        if (!image.isEmpty()) {
             Product product = new Product(image, name, description, price, quantity, categoryID);
-            dao.insertProductWithImage(product);
+            if (dao.insertProductWithImage(product)) {
+                req.setAttribute("message", "Create product success");
+                req.setAttribute("alertType", "success");
+            } else {
+                req.setAttribute("message", "This product name is exist");
+                req.setAttribute("alertType", "warning");
+            }
         } else {
             Product product = new Product(name, description, price, quantity, categoryID);
-            dao.insertProduct(product);
+            if (dao.insertProduct(product)) {
+                req.setAttribute("message", "Create product success");
+                req.setAttribute("alertType", "success");
+            } else {
+                req.setAttribute("message", "This product name is exist");
+                req.setAttribute("alertType", "warning");
+            }
         }
+        List<Category> categories = dao.selectAllCategories();
+        req.setAttribute("categories", categories);
         RequestDispatcher dispatcher = req.getRequestDispatcher("product/create.jsp");
         try {
             dispatcher.forward(req, resp);

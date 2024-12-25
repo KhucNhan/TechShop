@@ -1,0 +1,51 @@
+/* Nền của giỏ hàng và các phần tử */
+.table {
+    background-color: #4B5563;  /* Xám nhạt */
+    color: #F3F4F6;  /* Xám trắng */
+}
+
+/* Định dạng các hàng trong bảng */
+.table tbody tr:hover {
+    background-color: #3B82F6;  /* Xanh dương sáng khi hover */
+    color: white;
+}
+
+/* Các tiêu đề trong bảng */
+.table th {
+    background-color: #1F2937;  /* Xám đậm */
+    color: #F3F4F6;  /* Xám trắng */
+}
+
+/* Tạo màu sắc cho các checkbox */
+.product {
+    accent-color: #14B8A6;  /* Xanh ngọc */
+    scale:1.7;
+}
+
+/* Tổng tiền */
+#total {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Nút Buy Now */
+.buy {
+    background-color: #3B82F6;  /* Xanh dương sáng */
+    color: #F3F4F6;  /* Xám trắng */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.buy:hover {
+    background-color: #14B8A6;  /* Xanh ngọc */
+}
+
+/* Checkbox Select All */
+#selectAll {
+    accent-color: #14B8A6;  /* Xanh ngọc */
+}
+
+.tbody tr td {
+    color: #F3F4F6;
+}
