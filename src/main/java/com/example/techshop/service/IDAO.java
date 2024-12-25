@@ -49,4 +49,8 @@ public interface IDAO {
     List<Order> selectAllOrdersByUser(int userID);
 
     boolean updateOrder(int orderID, Order order);
+
+    List<OrderDetails> selectOrderdetailsByOrderID(int orderID);
+
+    boolean insertUserWithImage(User user);
 }

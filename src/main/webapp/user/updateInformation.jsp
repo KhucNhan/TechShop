@@ -12,79 +12,93 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/css/menu_footer.css">
     <title>Edit user</title>
+    <style>
+        .container span, label {
+            width: 20%;
+        }
+
+        .container input, select {
+            width: 70%;
+        }
+
+        .container form {
+            width: 100%;
+            text-align: center;
+            background-color: #4B5563;
+            border: 2px solid #3B82F6;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .container .row {
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
 <jsp:include page="/menuAdmin.jsp"></jsp:include>
 
 <div class="container" style="margin-bottom: 3vh; padding-top:11vh">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
             <form action="/users?action=updateInformation" method="post">
-                <div class="row d-flex justify-content-center">
-                    <c:if test="${requestScope['success'] != null}">
-                        <div style="position: fixed; top:10vh; left:42%; text-align: center"
-                             class="alert alert-success col-2 align-self-center">Success
-                        </div>
-                    </c:if>
 
-                    <div class="w-100"></div>
-
-                    <div class=" mb-3 col-4 " style="padding-left: 0; padding-right: 0">
-                        <label style="<c:if test="${requestScope['imageMessage'] != null}"> color: red;</c:if>" for="image">Image url</label>
-                        <input name="image" type="text" class="" id="image"
-                                value="${user.image}">
-                    </div>
-
-                    <div class="w-100"></div>
-
-                    <div class=" mb-3 col-4 " style="padding-left: 0; padding-right: 0">
-                        <label style="<c:if test="${requestScope['nameMessage'] != null}"> color: red;</c:if>" for="name">Name</label>
-                        <input name="name" type="text" class="" id="name"
-                                value="${user.name}">
-                    </div>
-
-                    <div class="w-100"></div>
-
-                    <div class=" mb-3 col-4 " style="padding-left: 0; padding-right: 0">
-                        <label style="<c:if test="${requestScope['usernameMessage'] != null}"> color: red;</c:if>" for="username">Username</label>
-                        <input name="username" type="text" class="" id="username"
-                                value="${user.username}">
-                    </div>
-
-                    <div class="w-100"></div>
-
-                    <div class=" mb-3 col-4 " style="padding-left: 0; padding-right: 0">
-                        <label style="<c:if test="${requestScope['genderMessage'] != null}"> color: red;</c:if>">
-                            Gender:
-                        </label>
-                        <input type="radio" id="male" name="gender" value="Male" ${user.gender.equalsIgnoreCase("Male") ? 'checked' : ''}>
-                        <label for="male">Male</label>
-
-                        <input type="radio" id="female" name="gender" value="Female" ${user.gender.equalsIgnoreCase("Female") ? 'checked' : ''}>
-                        <label for="female">Female</label>
-
-                        <input type="radio" id="other" name="gender" value="Other" ${user.gender.equalsIgnoreCase("Other") ? 'checked' : ''}>
-                        <label for="other">Other</label>
-                        <br>
-                    </div>
-
-                    <div class="w-100"></div>
-
-                    <div class=" mb-3 col-4 " style="padding-left: 0; padding-right: 0">
-                        <label style="<c:if test="${requestScope['dateMessage'] != null}"> color: red;</c:if>" for="dateOfBirth">Date of birth</label>
-                        <input name="dateOfBirth" type="date" class="" id="dateOfBirth"
-                               value="${user.dateOfBirth}">
-                    </div>
-
-                    <div class="w-100"></div>
-
-                    <button type="submit" class="btn btn-primary col-4">Update</button>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Image</span>
+                    <input value="${user.image}" name="image" type="text" class="form-control" placeholder="Image url"
+                           aria-label="Image url" aria-describedby="basic-addon1">
                 </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon2">Name</span>
+                    <input value="${user.name}" name="name" type="text" class="form-control" placeholder="Name"
+                           aria-label="Name" aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon3">Username</span>
+                    <input value="${user.username}" name="username" type="text" class="form-control"
+                           placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">Gender</label>
+                    <select class="form-select" id="inputGroupSelect01" name="gender">
+                        <option ${user.gender == 'Male' ? 'selected' : ''} value="Male">Male</option>
+                        <option ${user.gender == 'Female' ? 'selected' : ''} value="Female">Female</option>
+                        <option ${user.gender == 'Other' ? 'selected' : ''} value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon4">Date of birth</span>
+                    <input value="${user.dateOfBirth}" name="dateOfBirth" type="date" class="form-control"
+                           placeholder="Date of birth" aria-label="Date of birth" aria-describedby="basic-addon1">
+                </div>
+
+                <input type="hidden" name="userID" value="${user.userID}">
+
+                <button type="submit" class="btn btn-primary col-4">Update</button>
+
             </form>
         </div>
 
     </div>
 </div>
+
+<% String message = (String) request.getAttribute("message");
+    String alertType = (String) request.getAttribute("alertType");
+%>
+
+<% if (message != null) { %>
+<div style="position: fixed; top: 80px; left: 20px; z-index: 1050; width: auto;"
+     class="alert alert-<%= alertType %> alert-dismissible fade show" role="alert">
+    <%= message %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<% } %>
+
 </body>
 </html>

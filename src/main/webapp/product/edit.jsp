@@ -6,7 +6,30 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/css/menu_footer.css">
     <title>Edit Product</title>
+    <style>
+        .container  span, label {
+            width: 20%;
+        }
+
+        .container  input, select {
+            width: 70%;
+        }
+
+        .container  form {
+            width: 100%;
+            text-align: center;
+            background-color: #4B5563;
+            border: 2px solid #3B82F6;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .container  .row {
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
 <jsp:include page="/menuAdmin.jsp"></jsp:include>
@@ -14,33 +37,62 @@
 <div class="container" style="margin-bottom: 3vh; padding-top:11vh">
     <div class="row">
         
-        <div class="col-md-12">
+        <div class="col-md-6">
             <form action="/products?action=edit&productID=${product.productID}" method="post">
-                <input style="<c:if test="${requestScope['imageMessage'] != null}"> color: red;</c:if>" type="hidden" name="productID" value="${product.productID}">
-                <label for="image">Image:</label>
-                <input type="text" id="image" name="image" value="${product.image}"><br>
 
-                <label style="<c:if test="${requestScope['nameMessage'] != null}"> color: red;</c:if>" for="name">Name:</label>
-                <input type="text" id="name" name="name" value="${product.name}"><br>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Image</span>
+                    <input value="${product.image}" name="image" type="text" class="form-control" placeholder="Image url" aria-label="Image url" aria-describedby="basic-addon1">
+                </div>
 
-                <label style="<c:if test="${requestScope['descriptionMessage'] != null}"> color: red;</c:if>" for="description">Description:</label>
-                <textarea id="description" name="description">${product.description}</textarea><br>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon2">Name</span>
+                    <input value="${product.name}" name="name" type="text" class="form-control" placeholder="Name" aria-label="Name" aria-describedby="basic-addon1">
+                </div>
 
-                <label style="<c:if test="${requestScope['priceMessage'] != null}"> color: red;</c:if>" for="price">Price:</label>
-                <input type="number" id="price" name="price" value="<fmt:formatNumber value="${product.price}" pattern="#.###"/>">
-                <label> VND</label><br>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon3">Description</span>
+                    <input value="${product.description}" name="description" type="text" class="form-control" placeholder="Description" aria-label="Description" aria-describedby="basic-addon1">
+                </div>
 
-                <label style="<c:if test="${requestScope['quantityMessage'] != null}"> color: red;</c:if>" for="quantity">Quantity:</label>
-                <input type="number" id="quantity" name="quantity" value="${product.quantity}"><br>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon4">Price</span>
+                    <input value="<fmt:formatNumber value="${product.price}" pattern="####"/>" name="price" type="number" class="form-control" placeholder="Price" aria-label="Price" aria-describedby="basic-addon1">
+                </div>
 
-                <label style="<c:if test="${requestScope['categoryIDMessage'] != null}"> color: red;</c:if>" for="categoryID">Category ID:</label>
-                <input type="number" id="categoryID" name="categoryID" value="${product.categoryID}"><br>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon5">Quantity</span>
+                    <input value="${product.quantity}" name="quantity" type="number" class="form-control" placeholder="Quantity" aria-label="Quantity" aria-describedby="basic-addon1">
+                </div>
 
-                <button type="submit">Update Product</button>
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">Category</label>
+                    <select class="form-select" id="inputGroupSelect01" name="categoryID">
+                        <c:forEach items="${categories}" var="category">
+                            <option ${product.status ? 'selected' : ''} value="${category.categoryID}">${category.name}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+
+                <input type="hidden" name="productID" value="${product.productID}">
+
+                <button class="btn btn-primary" type="submit">Update Product</button>
             </form>
         </div>
         
     </div>
 </div>
+
+<% String message = (String) request.getAttribute("message");
+    String alertType = (String) request.getAttribute("alertType");
+%>
+
+<% if (message != null) { %>
+<div style="position: fixed; top: 80px; left: 20px; z-index: 1050; width: auto;" class="alert alert-<%= alertType %> alert-dismissible fade show" role="alert">
+    <%= message %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<% } %>
+
 </body>
 </html>

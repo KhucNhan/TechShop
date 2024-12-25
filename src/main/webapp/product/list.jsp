@@ -6,6 +6,8 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/css/menu_footer.css">
+    <link rel="stylesheet" href="/css/table.css">
     <title>Product Management Application</title>
 </head>
 <body>
@@ -17,34 +19,34 @@
             <h2>
                 <a class="btn btn-primary" href="/products?action=create">Add New Product</a>
             </h2>
-            <div align="center">
-                <table border="1" cellpadding="5" class="col-md-10">
-                    <tr>
-                        <th class="text-center">#</th>
-                        <th class="text-center" class="col-md-1">Image</th>
-                        <th class="text-center">Name</th>
-                        <th class="text-center">Description</th>
-                        <th class="text-center">Price</th>
-                        <th class="text-center">Quantity</th>
-                        <th class="text-center">Category</th>
-                        <th class="text-center">Status</th>
-                        <th class="text-center">Edit</th>
-                        <th class="text-center">Delete</th>
-                    </tr>
+<%--            <div align="center">--%>
+                <table border="1" cellpadding="5" class="col-md-12 table">
+                    <thead style="place-items: stretch; max-height: 6vh; display: block; text-transform: uppercase; width: 100%;">
+                        <tr style="height: 100%">
+                            <th style="width: 5%" class="text-center">#</th>
+                            <th style="width: 10%" class="text-center">Image</th>
+                            <th style="width: 15%" class="align-content-center">Name</th>
+                            <th style="width: 20%" class="align-content-center">Description</th>
+                            <th style="width: 15%" class="text-center">Price</th>
+                            <th style="width: 5%" class="text-center">Quantity</th>
+                            <th style="width: 5%" class="text-center">Category</th>
+                            <th style="width: 10%" class="text-center">Status</th>
+                            <th style="width: 15%" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     <c:forEach var="product" items="${products}">
-                        <tr>
-                            <td class="text-center">${product.productID}</td>
-                            <td class="text-center"><img class="col-md-6" src="${product.image}"></td>
-                            <td class="text-center">${product.name}</td>
-                            <td class="text-center">${product.description}</td>
-                            <td class="text-center"><fmt:formatNumber value="${product.price}" pattern="#,###"/> VND</td>
-                            <td class="text-center">${product.quantity}</td>
-                            <td class="text-center">${product.categoryID}</td>
-                            <td class="text-center">${product.status ? 'In stock' : 'Out of stock'}</td>
-                            <td class="text-center">
+                        <tr class="d-flex">
+                            <td style="width: 6%" class="text-center">${product.productID}</td>
+                            <td style="width: 11%" class="text-center"><img src="${product.image}"></td>
+                            <td style="width: 16%; text-align: start" class="align-content-center">${product.name}</td>
+                            <td style="width: 22%; text-align: start" class="align-content-center">${product.description}</td>
+                            <td style="width: 16%" class="text-center"><fmt:formatNumber value="${product.price}" pattern="#,###"/> VND</td>
+                            <td style="width: 8%" class="text-center">${product.quantity}</td>
+                            <td style="width: 9%" class="text-center">${product.categoryID == 1 ? 'Phone' : 'Laptop'}</td>
+                            <td style="width: 10%" class="text-center">${product.status ? 'In stock' : 'Out of stock'}</td>
+                            <td style="width: 16%" class="text-center">
                                 <a class="btn btn-warning" href="/products?action=edit&productID=${product.productID}">Edit</a>
-                            </td>
-                            <td class="text-center">
                                 <c:if test="${product.status == true}">
                                     <a class="btn btn-danger" href="/products?action=delete&productID=${product.productID}">Inactive</a>
                                 </c:if>
@@ -54,10 +56,11 @@
                             </td>
                         </tr>
                     </c:forEach>
+                    </tbody>
                 </table>
             </div>
         </div>
-        
+
     </div>
 </div>
 </body>

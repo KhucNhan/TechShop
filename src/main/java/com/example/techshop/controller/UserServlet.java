@@ -139,11 +139,10 @@ public class UserServlet extends HttpServlet {
         User user = dao.selectUser(id);
         req.setAttribute("user", user);
 
-        String message = "";
+        String message = "Not null requirement";
         if (image.isEmpty()) {
-
-            message = "x";
-            req.setAttribute("imageMessage", message);
+            req.setAttribute("message", message);
+            req.setAttribute("alertType", "alert");
             RequestDispatcher dispatcher = req.getRequestDispatcher("user/updateInformation.jsp");
 
             try {
@@ -155,8 +154,8 @@ public class UserServlet extends HttpServlet {
         }
 
         if (name.isEmpty()) {
-            message = "x";
-            req.setAttribute("nameMessage", message);
+            req.setAttribute("message", message);
+            req.setAttribute("alertType", "alert");
             RequestDispatcher dispatcher = req.getRequestDispatcher("user/updateInformation.jsp");
 
             try {
@@ -168,21 +167,8 @@ public class UserServlet extends HttpServlet {
         }
 
         if (username.length() < 8) {
-            message = "x";
-            req.setAttribute("usernameMessage", message);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("user/updateInformation.jsp");
-
-            try {
-                dispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
-
-        if (gender == null) {
-            message = "x";
-            req.setAttribute("genderMessage", message);
+            req.setAttribute("message", "Username must have at least 8 character");
+            req.setAttribute("alertType", "alert");
             RequestDispatcher dispatcher = req.getRequestDispatcher("user/updateInformation.jsp");
 
             try {
@@ -194,8 +180,8 @@ public class UserServlet extends HttpServlet {
         }
 
         if (dateOfBirth.isEmpty()) {
-            message = "x";
-            req.setAttribute("dateMessage", message);
+            req.setAttribute("message", message);
+            req.setAttribute("alertType", "alert");
             RequestDispatcher dispatcher = req.getRequestDispatcher("user/updateInformation.jsp");
 
             try {
@@ -212,8 +198,9 @@ public class UserServlet extends HttpServlet {
         user.setGender(gender);
         user.setDateOfBirth(Date.valueOf(dateOfBirth));
 
-        message = "v";
-        req.setAttribute("success", message);
+        message = "Update information success";
+        req.setAttribute("message", message);
+        req.setAttribute("alertType", "success");
 
         dao.updateUser(id, user);
         RequestDispatcher dispatcher = req.getRequestDispatcher("user/updateInformation.jsp");
@@ -280,35 +267,18 @@ public class UserServlet extends HttpServlet {
         String dateOfBirth = req.getParameter("dateOfBirth");
         String role = req.getParameter("role");
         String status = req.getParameter("status");
+        
+        int userID = Integer.parseInt(req.getParameter("userID"));
+        User user = dao.selectUser(userID);
 
-        String message = "";
-        if (image.isEmpty()) {
-            message = "x";
-            req.setAttribute("imageMessage", message);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("user/edit.jsp");
-            try {
-                dispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
+        String message = "Not null requirement";
+        if (checkNullInput(req, resp, image, message, user)) return;
 
-        if (name.isEmpty()) {
-            message = "x";
-            req.setAttribute("nameMessage", message);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("user/edit.jsp");
-            try {
-                dispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
+        if (checkNullInput(req, resp, name, message, user)) return;
 
         if (username.length() < 8) {
-            message = "x";
-            req.setAttribute("usernameMessage", message);
+            req.setAttribute("message", "Username must have at least 8 character");
+            req.setAttribute("alertType", "alert");
             RequestDispatcher dispatcher = req.getRequestDispatcher("user/edit.jsp");
             try {
                 dispatcher.forward(req, resp);
@@ -318,68 +288,19 @@ public class UserServlet extends HttpServlet {
             return;
         }
 
-        if (password.length() < 8) {
-            message = "x";
-            req.setAttribute("passwordMessage", message);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("user/edit.jsp");
-            try {
-                dispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
+        if (checkNullInput(req, resp, status, message, user)) return;
 
-        if (gender == null) {
-            message = "x";
-            req.setAttribute("genderMessage", message);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("user/edit.jsp");
-            try {
-                dispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
+        if (checkNullInput(req, resp, role, message, user)) return;
 
-        if (dateOfBirth.isEmpty()) {
-            message = "x";
-            req.setAttribute("dateMessage", message);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("user/edit.jsp");
-            try {
-                dispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
+        if (checkNullInput(req, resp, gender, message, user)) return;
 
-        if (role == null) {
-            message = "x";
-            req.setAttribute("roleMessage", message);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("user/edit.jsp");
-            try {
-                dispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
-
-        if (status == null) {
-            message = "x";
-            req.setAttribute("statusMessage", message);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("user/edit.jsp");
-            try {
-                dispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
+        if (checkNullInput(req, resp, dateOfBirth, message, user)) return;
 
         User signupUser = new User(image, name, username, password, gender, Date.valueOf(dateOfBirth), role, Boolean.parseBoolean(status));
-        dao.insertUser(signupUser);
+        dao.updateUser(userID, signupUser);
+        req.setAttribute("message", "Edit user success");
+        req.setAttribute("alertType", "success");
+        req.setAttribute("user", user);
         RequestDispatcher dispatcher = req.getRequestDispatcher("user/edit.jsp");
 
         try {
@@ -389,29 +310,57 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    private void createUser(HttpServletRequest req, HttpServletResponse resp) {
-        String name = req.getParameter("name");
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
-        String gender = req.getParameter("gender");
-        String dateOfBirth = req.getParameter("dateOfBirth");
-
-        String message = "";
-        if (name.isEmpty()) {
-            message = "x";
-            req.setAttribute("nameMessage", message);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("user/create.jsp");
+    private boolean checkNullInput(HttpServletRequest req, HttpServletResponse resp, String input, String message, User user) {
+        if (input.isEmpty()) {
+            req.setAttribute("message", message);
+            req.setAttribute("alertType", "alert");
+            req.setAttribute("user", user);
+            RequestDispatcher dispatcher = req.getRequestDispatcher("user/edit.jsp");
             try {
                 dispatcher.forward(req, resp);
             } catch (ServletException | IOException e) {
                 throw new RuntimeException(e);
             }
-            return;
+            return true;
         }
+        return false;
+    }
+
+    private boolean checkNullInput(HttpServletRequest req, HttpServletResponse resp, String input, String message) {
+        if (input.isEmpty()) {
+            req.setAttribute("message", message);
+            req.setAttribute("alertType", "alert");
+            RequestDispatcher dispatcher = req.getRequestDispatcher("user/edit.jsp");
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private void createUser(HttpServletRequest req, HttpServletResponse resp) {
+        String image = req.getParameter("image");
+        String name = req.getParameter("name");
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+        String gender = req.getParameter("gender");
+        String dateOfBirth = req.getParameter("dateOfBirth");
+        String role = req.getParameter("role");
+
+        String message = "Not null and invalidate requirement";
+
+        if (checkNullInput(req, resp, name, message)) return;
+
+        if (checkNullInput(req, resp, gender, message)) return;
+
+        if (checkNullInput(req, resp, dateOfBirth, message)) return;
 
         if (username.length() < 8) {
-            message = "x";
-            req.setAttribute("usernameMessage", message);
+            req.setAttribute("message", "Username must have at least 8 character");
+            req.setAttribute("alertType", "alert");
             RequestDispatcher dispatcher = req.getRequestDispatcher("user/create.jsp");
             try {
                 dispatcher.forward(req, resp);
@@ -422,8 +371,8 @@ public class UserServlet extends HttpServlet {
         }
 
         if (password.length() < 8) {
-            message = "x";
-            req.setAttribute("passwordMessage", message);
+            req.setAttribute("message", "Password must have at least 8 character");
+            req.setAttribute("alertType", "alert");
             RequestDispatcher dispatcher = req.getRequestDispatcher("user/create.jsp");
             try {
                 dispatcher.forward(req, resp);
@@ -433,33 +382,16 @@ public class UserServlet extends HttpServlet {
             return;
         }
 
-        if (gender == null) {
-            message = "x";
-            req.setAttribute("genderMessage", message);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("user/create.jsp");
-            try {
-                dispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
+        if (image.isEmpty()) {
+            User signupUser = new User(name, username, password, gender, Date.valueOf(dateOfBirth), role);
+            dao.insertUser(signupUser);
+        } else {
+            User signupUser = new User(image, name, username, password, gender, Date.valueOf(dateOfBirth), role);
+            dao.insertUserWithImage(signupUser);
         }
 
-        if (dateOfBirth.isEmpty()) {
-            message = "x";
-            req.setAttribute("dateMessage", message);
-            RequestDispatcher dispatcher = req.getRequestDispatcher("user/create.jsp");
-            try {
-                dispatcher.forward(req, resp);
-            } catch (ServletException | IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
-
-        User signupUser = new User(name, username, password, gender, Date.valueOf(dateOfBirth));
-        dao.insertUser(signupUser);
-
+        req.setAttribute("message", "Create user success");
+        req.setAttribute("alertType", "success");
         RequestDispatcher dispatcher = req.getRequestDispatcher("user/create.jsp");
 
         try {

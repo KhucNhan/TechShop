@@ -7,6 +7,8 @@
     <title>Cart</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/css/menu_footer.css">
+    <link rel="stylesheet" href="/css/cart.css">
 </head>
 <body>
 <jsp:include page="/menu.jsp"></jsp:include>
@@ -15,8 +17,8 @@
     <div class="row">
         <div class="col-md-12">
             <div class="overflow-y-auto" style="max-height: 76vh; width: 100%">
-                <table class="table table-striped table-hover" style="width: 100%">
-                    <thead style="display: block; width: 100%; background-color: #f37979; text-transform: uppercase">
+                <table class="table" style="width: 100%; background-color: #4B5563;">
+                    <thead class="table-light" style="display: block; width: 100%; background-color: #f37979; text-transform: uppercase">
                     <tr style="width: 100%; height: 6vh; font-weight: bold">
                         <td style="width: 5%" class="text-center align-content-center">Select</td>
                         <td style="width: 15%;" class="text-center align-content-center">Image</td>
@@ -28,7 +30,7 @@
                     </tr>
                     </thead>
 
-                    <tbody style="overflow-y: auto;display: block;height: 74vh; width: 100%">
+                    <tbody class="tbody" style="overflow-y: auto;display: block;height: 74vh; width: 100%">
                     <c:forEach items="${sessionScope['cart']}" var="cartItem">
                         <tr style="width: 100%;">
                             <td style="width: 5%" class="text-center align-content-center">
@@ -36,7 +38,7 @@
                                       method="post">
                                     <input type="checkbox" class="product"
                                            data-price="${cartItem.value.product.price * cartItem.value.quantity}"
-                                           onclick="calculateTotal(); updateSelectAll()" oninput="this.form.submit()"
+                                           onclick="calculateTotal()" oninput="this.form.submit()"
                                         ${cartItem.value.product.selected ? 'checked' : ''}>
                                 </form>
 
@@ -71,8 +73,11 @@
                                             type="submit">+
                                     </button>
                                 </form>
-                                <c:if test="${message != null}">
-                                    <div style="color:red">${message}</div>
+                                <c:if test="${oos != null && oos == cartItem.value.product.productID}">
+                                    <div style="color:red">Product out of stock</div>
+                                </c:if>
+                                <c:if test="${in != null && in == cartItem.value.product.productID}">
+                                    <div style="color:red">Invalidate number</div>
                                 </c:if>
                             </td>
                             <td style="width: 20%" class="text-center align-content-center"><fmt:formatNumber
@@ -89,13 +94,15 @@
                 </table>
             </div>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-12" style="z-index: 1000;">
             <div class="d-flex justify-content-between"
                  style="background-color: #fffc73; height: 10vh; font-size: x-large;">
                 <div class="d-inline" style="width: 30%; align-content: center; margin-left: 20px">
-                    <label for="selectAll" class="mr-2">Select all product</label>
-                    <input style="scale: 1.7; margin-left: 20px;" id="selectAll" type="checkbox"
-                           onclick="selectAllProduct()">
+                    <form action="/cart?action=selectedAll" method="post">
+                        <label style="color: black" for="selectAll" class="mr-2">Select all product</label>
+                        <input style="scale: 1.7; margin-left: 20px;" id="selectAll" type="checkbox" name="selectAll"
+                               oninput="this.form.submit()" ${allSelected != null ? 'checked' : ''}>
+                    </form>
                 </div>
                 <div class="d-inline" style="width: 70%; align-content: center; text-align: end">
                     <form class="" action="/cart?action=buy" method="post" style="margin-inline: 20px; margin-block: 0">
@@ -104,7 +111,7 @@
                             <fmt:formatNumber
                                     value="${total}" pattern="#,###"/> VND
                         </label>
-                        <button class="btn btn-success" type="submit" style="margin-inline: 20px; font-size: x-large">Buy
+                        <button class="btn btn-success buy" type="submit" style="margin-inline: 20px; font-size: x-large">Buy
                         </button>
                     </form>
                 </div>
@@ -130,27 +137,6 @@
         });
 
         document.getElementById('total').innerText = total.toLocaleString('vi-VN') + " VND";
-    }
-
-    let isAllSelected = false;
-
-    function selectAllProduct() {
-        let selectAllCheckbox = document.getElementById('selectAll');
-        let checkboxes = document.querySelectorAll('.product');
-
-        checkboxes.forEach((checkbox) => {
-            checkbox.checked = selectAllCheckbox.checked;
-        });
-
-        calculateTotal();
-    }
-
-    function updateSelectAll() {
-        let checkboxes = document.querySelectorAll('.product');
-        let checkedBoxes = document.querySelectorAll('.product:checked');
-        let selectAllCheckbox = document.getElementById('selectAll');
-
-        selectAllCheckbox.checked = (checkboxes.length === checkedBoxes.length);
     }
 </script>
 </body>

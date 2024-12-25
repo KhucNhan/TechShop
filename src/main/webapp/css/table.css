@@ -1,0 +1,68 @@
+/* Thêm thanh cuộn chỉ cho tbody */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+ /*Các tiêu đề trong bảng*/
+th {
+    background-color: #1F2937; /* Xám đậm */
+    color: #F3F4F6; /* Màu chữ sáng */
+    padding: 10px;
+    text-align: center;
+}
+
+/* Các hàng trong bảng */
+tr {
+    background-color: #4B5563; /* Xám nhạt */
+    color: #F3F4F6; /* Màu chữ sáng */
+    height: 15vh; /* Chiều cao mỗi dòng */
+}
+
+tr:hover {
+    background-color: #3B82F6; /* Xanh dương sáng khi hover */
+    color: #F3F4F6; /* Màu chữ sáng */
+}
+
+/* Các ô trong bảng */
+td {
+    padding: 10px;
+    vertical-align: middle; /* Căn giữa chữ dọc */
+    text-align: center; /* Căn giữa chữ ngang */
+}
+
+/* Thêm thanh cuộn dọc chỉ cho tbody */
+tbody {
+    display: block;
+    max-height: 73vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+/* Định dạng cho các thẻ hình ảnh trong bảng */
+img {
+    /*width: 100%;*/
+    height: 13vh;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* Nút bấm trong bảng */
+.btn {
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #F3F4F6; /* Chữ sáng */
+}
+
+thead {
+    display: block;
+    width: 100%;
+    text-transform: uppercase;
+}
+
+tr.d-flex td {
+    align-content: center;
+}

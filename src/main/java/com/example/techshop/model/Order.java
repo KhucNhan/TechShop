@@ -8,6 +8,7 @@ public class Order {
     private Date orderDate;
     private double total;
     private String status;
+    private String userName;
 
     public Order() {
     }
@@ -58,5 +59,22 @@ public class Order {
         this.orderDate = orderDate;
         this.total = total;
         this.status = status;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Order(int orderID, int userID, Date orderDate, double total, String status, String userName) {
+        this.orderID = orderID;
+        this.userID = userID;
+        this.orderDate = orderDate;
+        this.total = total;
+        this.status = status;
+        this.userName = userName;
     }
 }

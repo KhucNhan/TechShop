@@ -51,7 +51,7 @@ public class AddToCartServlet extends HttpServlet {
                 orderDetails.setQuantity(1);
                 cart.put(productID, orderDetails);
             } else if (product.getQuantity() == orderDetails.getQuantity()) {
-                List<Product> products = dao.selectAllProducts();
+                List<Product> products = dao.selectActiveProducts();
                 req.setAttribute("products", products);
                 req.setAttribute("productID", productID);
 
@@ -63,9 +63,9 @@ public class AddToCartServlet extends HttpServlet {
                 orderDetails.setQuantity(orderDetails.getQuantity() + 1);
             }
             session.setAttribute("cart", cart);
+            session.setAttribute("cartItemCount", cart.size());
         }
-
-        List<Product> products = dao.selectAllProducts();
+        List<Product> products = dao.selectActiveProducts();
         req.setAttribute("products", products);
         req.getRequestDispatcher("web/product.jsp").forward(req, resp);
     }

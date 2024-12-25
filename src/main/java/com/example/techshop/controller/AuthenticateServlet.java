@@ -1,5 +1,6 @@
 package com.example.techshop.controller;
 
+import com.example.techshop.model.OrderDetails;
 import com.example.techshop.model.User;
 import com.example.techshop.service.DAO;
 
@@ -12,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet(name = "AuthenticationServlet", value = "/authenticate")
 public class AuthenticateServlet extends HttpServlet {
@@ -125,9 +128,12 @@ public class AuthenticateServlet extends HttpServlet {
         User currentUser = dao.checkLogin(username, password);
 
         try {
-            if (currentUser != null) {
+            if (currentUser != null && currentUser.isStatus()) {
                 HttpSession session = req.getSession();
                 session.setAttribute("currentUserID", currentUser.getUserID());
+                Map<Integer, OrderDetails> cart = new HashMap<>();
+                session.setAttribute("cart", cart);
+                session.setAttribute("cartItemCount", cart.size());
                 resp.sendRedirect("products");
             } else {
                 req.setAttribute("message", "Password incorrect or username doesn't exist.");

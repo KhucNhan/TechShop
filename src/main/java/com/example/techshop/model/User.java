@@ -36,7 +36,25 @@ public class User {
         this.status = status;
     }
 
-    public User(String name, String username, String password, String gender, Date dateOfBirth) {
+    public User(String name, String username, String password, String gender, Date dateOfBirth, String role) {
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
+        this.role = role;
+    }
+
+    public User(String image, String name, String username, String password, String gender, Date dateOfBirth, String role) {
+        this.image = image;
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
+        this.role = role;
+    }
+    public User( String name, String username, String password, String gender, Date dateOfBirth) {
         this.name = name;
         this.username = username;
         this.password = password;
@@ -78,6 +96,10 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public int getHashPassword() {
+        return password.hashCode();
     }
 
     public void setPassword(String password) {

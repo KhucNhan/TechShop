@@ -1,0 +1,7 @@
+.container > .row {
+    height: 50vh;
+}
+
+.container > .row > .row {
+    height: 10vh;
+}

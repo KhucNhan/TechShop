@@ -55,9 +55,42 @@ public class CartServlet extends HttpServlet {
             case "selected":
                 setSelected(req, resp);
                 break;
+            case "selectedAll":
+                selectAll(req, resp);
+                break;
             case "buy":
                 buy(req, resp);
                 break;
+        }
+    }
+
+    private void selectAll(HttpServletRequest req, HttpServletResponse resp) {
+        HttpSession session = req.getSession();
+        Map<Integer, OrderDetails> cart = (Map<Integer, OrderDetails>) session.getAttribute("cart");
+        String selectAll = req.getParameter("selectAll");
+        if (selectAll == null) {
+            selectAll = "";
+        }
+
+        for(Map.Entry<Integer, OrderDetails> cartItem : cart.entrySet()) {
+            cartItem.getValue().getProduct().setSelected(selectAll.equals("on"));
+        }
+
+        if (selectAll.isEmpty()) {
+            selectAll = null;
+        }
+
+        double total = sendTotal(req, resp);
+        req.setAttribute("total", total);
+        req.setAttribute("allSelected", selectAll);
+
+        session.setAttribute("cart", cart);
+
+        RequestDispatcher dispatcher = req.getRequestDispatcher("web/cart.jsp");
+        try {
+            dispatcher.forward(req, resp);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -85,7 +118,7 @@ public class CartServlet extends HttpServlet {
 
 
         session.setAttribute("cart", cart);
-
+        session.setAttribute("cartItemCount", cart.size());
         RequestDispatcher dispatcher = req.getRequestDispatcher("web/cart.jsp");
         try {
             dispatcher.forward(req, resp);
@@ -114,6 +147,20 @@ public class CartServlet extends HttpServlet {
 
         cart.get(productID).getProduct().setSelected(!cart.get(productID).getProduct().isSelected());
 
+        boolean selectedAll = true;
+        for(Map.Entry<Integer, OrderDetails> cartItem : cart.entrySet()) {
+            if (!cartItem.getValue().getProduct().isSelected()) {
+                selectedAll = false;
+                break;
+            }
+        }
+
+        if (selectedAll) {
+            req.setAttribute("allSelected", "null");
+        } else {
+            req.setAttribute("allSelected", null);
+        }
+
         double total = sendTotal(req, resp);
         req.setAttribute("total", total);
 
@@ -137,13 +184,11 @@ public class CartServlet extends HttpServlet {
         OrderDetails orderDetails = cart.get(productID);
 
         if (quantity > product.getQuantity()) {
-            String message = "Out of stock";
-            req.setAttribute("message", message);
+            req.setAttribute("oos", productID);
             req.getRequestDispatcher("web/cart.jsp").forward(req, resp);
             return;
         } else if (quantity < 0) {
-            String message = "Invalidate number";
-            req.setAttribute("message", message);
+            req.setAttribute("in", productID);
             req.getRequestDispatcher("web/cart.jsp").forward(req, resp);
             return;
         }
@@ -171,9 +216,10 @@ public class CartServlet extends HttpServlet {
         
         switch (action) {
             case "decreaseQuantity":
-                if (orderDetails.getQuantity() == 0) {
-                    String message = "Invalidate number";
-                    req.setAttribute("message", message);
+                if (orderDetails.getQuantity() == 1) {
+                    cart.remove(productID);
+                    session.setAttribute("cart", cart);
+                    session.setAttribute("cartItemCount", cart.size());
                     req.getRequestDispatcher("web/cart.jsp").forward(req, resp);
                     return;
                 }
@@ -183,8 +229,7 @@ public class CartServlet extends HttpServlet {
             case "increaseQuantity":
                 Product product = dao.selectProduct(productID);
                 if (orderDetails.getQuantity() == product.getQuantity()) {
-                    String message = "Out of stock";
-                    req.setAttribute("message", message);
+                    req.setAttribute("oos", productID);
                     req.getRequestDispatcher("web/cart.jsp").forward(req, resp);
                     return;
                 }

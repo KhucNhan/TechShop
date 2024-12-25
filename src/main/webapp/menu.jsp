@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<nav style="background-color: lightgrey" class="navbar navbar-expand-lg fixed-top bg-body-tertiary mb-2">
+<nav class="navbar navbar-expand-lg fixed-top bg-body-tertiary mb-2">
     <div class="container-fluid">
         <a class="navbar-brand" href="/products?action=#">
             <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="3rem" fill="currentColor" class="bi bi-laptop"
@@ -24,14 +24,14 @@
                     <a class="nav-link" href="/products?action=laptop">Laptop</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/orders?action=#">History</a>
+                    <a class="nav-link" href="orders">History</a>
                 </li>
                 <li style="position: relative; left: 100px;" class="nav-item align-items-center">
                     <form style="margin: 0" class="d-flex align-items-center" role="search">
                         <input style="width: 40rem; background-color: lightgrey; border:1px solid black"
                                class="form-control me-2" type="search" placeholder="Search"
                                aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
+                        <button class="btn btn-success" type="submit">Search</button>
                     </form>
                 </li>
                 <li class="nav-item" style="position: relative; left: 250px;">
@@ -43,7 +43,7 @@
                     </a>
                 </li>
                 <li class="nav-item dropdown d-flex" style="position: relative; left: 250px;">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                    <a id="cartIcon" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                        aria-expanded="false">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                              class="bi bi-gear" viewBox="0 0 16 16">
@@ -51,16 +51,20 @@
                             <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z"/>
                         </svg>
                     </a>
-                    <ul class="dropdown-menu" style="left: -75px;">
-                        <li><a class="dropdown-item" href="/users?action=updateInformation">Update account</a></li>
-                        <li><a class="dropdown-item" href="/users?action=changePassword">Change password</a></li>
+                    <ul class="dropdown-menu" style="left: -75px">
+                        <li><a style="color: black" class="dropdown-item" href="/users?action=updateInformation">Update
+                            account</a></li>
+                        <li><a style="color: black" class="dropdown-item" href="/users?action=changePassword">Change
+                            password</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="/authenticate?action=logout">Logout</a></li>
+                        <li><a style="color: black" class="dropdown-item" href="/authenticate?action=logout">Logout</a>
+                        </li>
                     </ul>
                 </li>
             </ul>
         </div>
     </div>
+    <label for="cartIcon" class="rounded-circle text-center" style="background-color: red;position: fixed; right: 90px; top: 15px; height: 20px; width: 20px; color: white; font-weight: bold; font-size: 13px">${sessionScope['cartItemCount'] == null ? '0' : sessionScope['cartItemCount']}</label>
 </nav>

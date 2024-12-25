@@ -1,9 +1,6 @@
 package com.example.techshop.service;
 
-import com.example.techshop.model.Order;
-import com.example.techshop.model.OrderDetails;
-import com.example.techshop.model.Product;
-import com.example.techshop.model.User;
+import com.example.techshop.model.*;
 import com.sun.org.apache.xpath.internal.operations.Or;
 
 import javax.servlet.http.HttpSession;
@@ -13,12 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DAO implements IDAO {
-    private final String jdbcURL = "jdbc:mysql://localhost:3306/techshop";
+    private final String jdbcURL = "jdbc:mysql://localhost:3306/techshop?useUnicode=true&characterEncoding=UTF-8";
     private final String jdbcUsername = "root";
     private final String jdbcPassword = "nhan771026";
-    private static final String SELECT_INSERT_USER_STATUS = "select status from users where name = ?, username = ?, password = ?";
+    private static final String SELECT_INSERT_USER_STATUS = "select status from users where name = ? and username = ? and password = ?";
     private static final String SELECT_USER_BY_UP = "select * from users where username = ? and password = ?";
     private static final String INSERT_USERS_SQL = "INSERT INTO Users (name, username, password, gender, dateOfBirth) VALUES (?, ?, ?, ?, ?);";
+    private static final String INSERT_USER_WITH_IMAGE_SQL = "INSERT INTO Users (image, name, username, password, gender, dateOfBirth) VALUES (?, ?, ?, ?, ?, ?);";
     private static final String SELECT_USER_BY_ID = "select * from users where userID =?";
     private static final String SELECT_ALL_USERS = "select * from users";
     private static final String DELETE_USERS_SQL = "update users set status = false where userID = ?;";
@@ -38,11 +36,73 @@ public class DAO implements IDAO {
 
     private static final String INSERT_NEW_ORDER = "insert into orders (userID, orderDate, total) value (?, ?, ?)";
     private static final String INSERT_NEW_ORDERDETAIL = "insert into orderdetails (orderID, productID, quantity, price, totalPrice) values (?, ?, ?, ?, ?)";
-    private static final String SELECT_ALL_ORDERS = "select * from orders";
+    private static final String SELECT_ALL_ORDERS = "select o.orderID, o.userID, o.orderDate, o.total, o.status, u.name from orders o join users u on o.userID = u.userID";
     private static final String SELECT_ORDER = "select * from orders where orderId = ?";
     private static final String SELECT_ORDERS_BY_USERID = "select * from orders where userID = ?";
 
     private static final String UPDATE_ORDER = "update orders set userID = ?, orderDate = ?, total = ?, status = ? where orderID = ?";
+
+    private static final String SELECT_ORDERDETAILS_BY_ORDERID = "select * from orderdetails where orderID = ?";
+
+    private static final String SELECT_ALL_CATEGORIES = "select * from categories";
+
+    public List<Category> selectAllCategories() {
+        connection = getConnection();
+        PreparedStatement preparedStatement;
+        List<Category> categories = new ArrayList<>();
+        try {
+            preparedStatement = connection.prepareStatement(SELECT_ALL_CATEGORIES);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                categories.add(new Category(
+                   resultSet.getInt(1),
+                   resultSet.getString(2)
+                ));
+            }
+
+            if (categories.isEmpty()) {
+                return null;
+            }
+
+            return categories;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<OrderDetails> selectOrderdetailsByOrderID(int orderID) {
+        connection = getConnection();
+        PreparedStatement preparedStatement;
+        List<OrderDetails> orderDetails = new ArrayList<>();
+        DAO dao = new DAO();
+        Order order = dao.selectOrder(orderID);
+
+        try {
+            preparedStatement = connection.prepareStatement(SELECT_ORDERDETAILS_BY_ORDERID);
+            preparedStatement.setInt(1, orderID);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                orderDetails.add(new OrderDetails(
+                        resultSet.getInt(1),
+                        order,
+                        dao.selectProduct(resultSet.getInt(2)),
+                        resultSet.getInt(4),
+                        resultSet.getDouble(5),
+                        resultSet.getDouble(6)
+                ));
+            }
+
+            if (orderDetails.isEmpty()) {
+                return null;
+            }
+            return orderDetails;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public Order selectOrder(int orderID) {
@@ -85,7 +145,8 @@ public class DAO implements IDAO {
                         resultSet.getInt(2),
                         resultSet.getTimestamp(3),
                         resultSet.getDouble(4),
-                        resultSet.getString(5)
+                        resultSet.getString(5),
+                        resultSet.getString(6)
                 ));
             }
 
@@ -220,7 +281,7 @@ public class DAO implements IDAO {
             preparedStatement.setString(3, user.getPassword());
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            boolean status = true;
+            boolean status = false;
             if (resultSet.next()) {
                 status = resultSet.getBoolean(1);
             }
@@ -233,6 +294,41 @@ public class DAO implements IDAO {
                 preparedStatement.setString(3, user.getPassword());
                 preparedStatement.setString(4, user.getGender());
                 preparedStatement.setString(5, user.getDateOfBirth().toString());
+                row = preparedStatement.executeUpdate();
+                return row > 0;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean insertUserWithImage(User user) {
+        connection = getConnection();
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement(SELECT_INSERT_USER_STATUS);
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getUsername());
+            preparedStatement.setString(3, user.getPassword());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            boolean status = false;
+            if (resultSet.next()) {
+                status = resultSet.getBoolean(1);
+            }
+
+            int row = 0;
+            if (!status) {
+                preparedStatement = connection.prepareStatement(INSERT_USER_WITH_IMAGE_SQL);
+                preparedStatement.setString(1, user.getImage());
+                preparedStatement.setString(2, user.getName());
+                preparedStatement.setString(3, user.getUsername());
+                preparedStatement.setString(4, user.getPassword());
+                preparedStatement.setString(5, user.getGender());
+                preparedStatement.setString(6, user.getDateOfBirth().toString());
                 row = preparedStatement.executeUpdate();
                 return row > 0;
             } else {
@@ -341,7 +437,7 @@ public class DAO implements IDAO {
             preparedStatement.setString(1, product.getName());
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            boolean status = true;
+            boolean status = false;
             if (resultSet.next()) {
                 status = resultSet.getBoolean(1);
             }
@@ -372,7 +468,7 @@ public class DAO implements IDAO {
             preparedStatement.setString(1, product.getName());
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            boolean status = true;
+            boolean status = false;
             if (resultSet.next()) {
                 status = resultSet.getBoolean(1);
             }
