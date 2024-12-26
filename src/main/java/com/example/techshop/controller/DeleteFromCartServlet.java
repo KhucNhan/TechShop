@@ -37,4 +37,24 @@ public class DeleteFromCartServlet extends HttpServlet {
         }
         resp.sendRedirect(req.getContextPath() + "/cart");
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int productID = Integer.parseInt(req.getParameter("productID"));
+
+        HttpSession session = req.getSession();
+        Object object = session.getAttribute("cart");
+
+        if (object != null) {
+            Map<Integer, OrderDetails> cart = (Map<Integer, OrderDetails>) object;
+            if (cart.get(productID).getProduct().isStatus()) {
+                cart.get(productID).getProduct().setStatus(true);
+                dao.updateProduct(productID, cart.get(productID).getProduct());
+            }
+            cart.remove(productID);
+            session.setAttribute("cart", cart);
+            session.setAttribute("cartItemCount", cart.size());
+        }
+        resp.sendRedirect(req.getContextPath() + "/cart");
+    }
 }
