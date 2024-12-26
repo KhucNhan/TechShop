@@ -91,7 +91,7 @@ public class DAO implements IDAO {
                 orderDetails.add(new OrderDetails(
                         resultSet.getInt(1),
                         order,
-                        dao.selectProduct(resultSet.getInt(2)),
+                        dao.selectProduct(resultSet.getInt(3)),
                         resultSet.getInt(4),
                         resultSet.getDouble(5),
                         resultSet.getDouble(6)
@@ -121,7 +121,7 @@ public class DAO implements IDAO {
                 return new Order(
                         resultSet.getInt(1),
                         resultSet.getInt(2),
-                        resultSet.getTimestamp(3),
+                        resultSet.getTimestamp(3).toLocalDateTime(),
                         resultSet.getDouble(4),
                         resultSet.getString(5)
                 );
@@ -146,7 +146,7 @@ public class DAO implements IDAO {
                 orders.add(new Order(
                         resultSet.getInt(1),
                         resultSet.getInt(2),
-                        resultSet.getTimestamp(3),
+                        resultSet.getTimestamp(3).toLocalDateTime(),
                         resultSet.getDouble(4),
                         resultSet.getString(5),
                         resultSet.getString(6)
@@ -177,7 +177,7 @@ public class DAO implements IDAO {
                 orders.add(new Order(
                         resultSet.getInt(1),
                         resultSet.getInt(2),
-                        resultSet.getTimestamp(3),
+                        resultSet.getTimestamp(3).toLocalDateTime(),
                         resultSet.getDouble(4),
                         resultSet.getString(5)
                 ));
@@ -201,7 +201,7 @@ public class DAO implements IDAO {
             preparedStatement = connection.prepareStatement(UPDATE_ORDER);
             preparedStatement.setInt(5, order.getOrderID());
             preparedStatement.setInt(1, order.getUserID());
-            preparedStatement.setTimestamp(2, (Timestamp) order.getOrderDate());
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(order.getOrderDate()));
             preparedStatement.setDouble(3, order.getTotal());
             preparedStatement.setString(4, order.getStatus());
             int row = preparedStatement.executeUpdate();
