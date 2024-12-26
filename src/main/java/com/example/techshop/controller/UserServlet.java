@@ -236,13 +236,28 @@ public class UserServlet extends HttpServlet {
         User user = dao.selectUser(userID);
 
         String oldPassword = req.getParameter("oldPassword");
-        String password = req.getParameter("password");
+        String password = req.getParameter("newPassword");
         String rePassword = req.getParameter("rePassword");
 
         String message = "";
+
+        if (oldPassword.length() < 8 || password.length() < 8 || rePassword.length() < 8) {
+            message = "Require at least 8 character";
+            req.setAttribute("message", message);
+            req.setAttribute("alertType", "alert");
+            RequestDispatcher dispatcher = req.getRequestDispatcher("user/changePassword.jsp");
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+        }
+
         if (!user.getPassword().equals(oldPassword)) {
-            message = "x";
-            req.setAttribute("oldPassword", message);
+            message = "Password incorrect";
+            req.setAttribute("message", message);
+            req.setAttribute("alertType", "alert");
             RequestDispatcher dispatcher = req.getRequestDispatcher("user/changePassword.jsp");
             try {
                 dispatcher.forward(req, resp);
@@ -253,8 +268,9 @@ public class UserServlet extends HttpServlet {
         }
 
         if (!password.equals(rePassword)) {
-            message = "x";
-            req.setAttribute("rePassword", message);
+            message = "New password didn't match";
+            req.setAttribute("message", message);
+            req.setAttribute("alertType", "alert");
             RequestDispatcher dispatcher = req.getRequestDispatcher("user/changePassword.jsp");
             try {
                 dispatcher.forward(req, resp);
@@ -266,8 +282,9 @@ public class UserServlet extends HttpServlet {
 
         user.setPassword(password);
         dao.updateUser(userID, user);
-        message = "v";
-        req.setAttribute("success", message);
+        message = "Change password success";
+        req.setAttribute("alertType", "success");
+        req.setAttribute("message", message);
         RequestDispatcher dispatcher = req.getRequestDispatcher("user/changePassword.jsp");
         try {
             dispatcher.forward(req, resp);

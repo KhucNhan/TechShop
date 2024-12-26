@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="/css/menu_footer.css">
     <link rel="stylesheet" href="/css/table.css">
     <title>Order detail</title>
+    <style>
+        body {
+            background-image: url("https://files.oaiusercontent.com/file-CCSV4pxxgouJe9ymj4qgdj?se=2024-12-26T09%3A09%3A32Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D08c74b3f-e0f2-4eab-b3e6-c946c68c5adc.webp&sig=QAdTrnl2M4hV2vBft3S5x71zqiQtPbU3zR%2BLYG70bOM%3D");
+        }
+    </style>
 </head>
 <body>
 <jsp:include page="${user.role == 'admin' ? '/menuAdmin.jsp' : '/menu.jsp'}"/>

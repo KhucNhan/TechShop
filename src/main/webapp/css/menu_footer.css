@@ -1,7 +1,8 @@
-.navbar ,.navbar-brand{
+.navbar, .navbar-brand {
     background-color: #1F2937;
     color: #F3F4F6;
 }
+
 .navbar a {
     color: #F3F4F6;
 }
@@ -16,6 +17,7 @@
 
 body {
     background-color: #1F2937;
+    background-image: url("https://files.oaiusercontent.com/file-CCSV4pxxgouJe9ymj4qgdj?se=2024-12-26T09%3A09%3A32Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D08c74b3f-e0f2-4eab-b3e6-c946c68c5adc.webp&sig=QAdTrnl2M4hV2vBft3S5x71zqiQtPbU3zR%2BLYG70bOM%3D");
     color: #F3F4F6;
 }
 
@@ -25,6 +27,7 @@ body {
     padding: 20px;
     text-align: center;
 }
+
 .footer a {
     color: #14B8A6;
 }
@@ -40,3 +43,10 @@ body {
     margin: 0 10px; /* Tạo khoảng cách giữa các mục */
 }
 
+.alert-alert ,.alert-warning {
+    background-color: rgba(255, 233, 0, 0.7);
+}
+
+.alert-success {
+    background-color: rgba(81, 255, 60, 0.7);
+}
