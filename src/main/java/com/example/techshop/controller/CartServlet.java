@@ -14,10 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @WebServlet(name = "CartServlet", value = "/cart")
 public class CartServlet extends HttpServlet {
@@ -98,8 +95,6 @@ public class CartServlet extends HttpServlet {
         HttpSession session = req.getSession();
         Map<Integer, OrderDetails> cart = (Map<Integer, OrderDetails>) session.getAttribute("cart");
 
-
-
         Order order = new Order();
         order.setUserID((Integer) session.getAttribute("currentUserID"));
         order.setTotal(sendTotal(req, resp));
@@ -112,10 +107,11 @@ public class CartServlet extends HttpServlet {
             if (cartItem.getValue().getProduct().isSelected()) {
                 cartItem.getValue().setTotalPrice(cartItem.getValue().getQuantity() * cartItem.getValue().getPrice());
                 dao.insertOrderdetail(orderID, cartItem.getValue());
+                Product product = cartItem.getValue().getProduct();
+                product.setQuantity(product.getQuantity() - cartItem.getValue().getQuantity());
                 iterator.remove();
             }
         }
-
 
         session.setAttribute("cart", cart);
         session.setAttribute("cartItemCount", cart.size());
@@ -216,6 +212,12 @@ public class CartServlet extends HttpServlet {
         
         switch (action) {
             case "decreaseQuantity":
+                if (orderDetails.getProduct().isStatus()) {
+                    Product product = orderDetails.getProduct();
+                    orderDetails.getProduct().setStatus(true);
+                    dao.updateProduct(productID, orderDetails.getProduct());
+                }
+
                 if (orderDetails.getQuantity() == 1) {
                     cart.remove(productID);
                     session.setAttribute("cart", cart);

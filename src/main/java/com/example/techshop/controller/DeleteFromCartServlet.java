@@ -27,6 +27,10 @@ public class DeleteFromCartServlet extends HttpServlet {
 
         if (object != null) {
             Map<Integer, OrderDetails> cart = (Map<Integer, OrderDetails>) object;
+            if (cart.get(productID).getProduct().isStatus()) {
+                cart.get(productID).getProduct().setStatus(true);
+                dao.updateProduct(productID, cart.get(productID).getProduct());
+            }
             cart.remove(productID);
             session.setAttribute("cart", cart);
             session.setAttribute("cartItemCount", cart.size());

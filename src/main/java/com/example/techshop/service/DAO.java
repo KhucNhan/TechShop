@@ -7,7 +7,9 @@ import javax.servlet.http.HttpSession;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DAO implements IDAO {
     private final String jdbcURL = "jdbc:mysql://localhost:3306/techshop?useUnicode=true&characterEncoding=UTF-8";
@@ -454,6 +456,79 @@ public class DAO implements IDAO {
                 ));
             }
             return users;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Map<List<Double>, List<Product>> getBestSellProduct(int numberOfProduct) {
+        connection = getConnection();
+        CallableStatement callableStatement;
+        Map<List<Double>, List<Product>> map = new HashMap<>();
+        List<Product> products = new ArrayList<>();
+        List<Double> totalRevenue = new ArrayList<>();
+
+        try {
+            callableStatement = connection.prepareCall("call getBestSellProduct(?)");
+            callableStatement.setInt(1, numberOfProduct);
+            ResultSet resultSet = callableStatement.executeQuery();
+            while (resultSet.next()) {
+                products.add(new Product(
+                        resultSet.getInt("productID"),
+                        resultSet.getString("image"),
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getDouble("price"),
+                        resultSet.getInt("quantity"),
+                        resultSet.getInt("categoryID"),
+                        resultSet.getBoolean("status")
+                ));
+                totalRevenue.add(resultSet.getDouble(9));
+            }
+
+            if (products.isEmpty()) {
+                return null;
+            } else {
+                map.put(totalRevenue, products);
+                return map;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Map<List<Integer>, List<Product>> getBestSellProductByQuantity(int numberOfProduct) {
+        connection = getConnection();
+        CallableStatement callableStatement;
+        Map<List<Integer>, List<Product>> map = new HashMap<>();
+        List<Product> products = new ArrayList<>();
+        List<Integer> totalQuantity = new ArrayList<>();
+        try {
+            callableStatement = connection.prepareCall("call getBestSellProductByQuantity(?)");
+            callableStatement.setInt(1, numberOfProduct);
+            ResultSet resultSet = callableStatement.executeQuery();
+            while (resultSet.next()) {
+                products.add(new Product(
+                        resultSet.getInt("productID"),
+                        resultSet.getString("image"),
+                        resultSet.getString("name"),
+                        resultSet.getString("description"),
+                        resultSet.getDouble("price"),
+                        resultSet.getInt("quantity"),
+                        resultSet.getInt("categoryID"),
+                        resultSet.getBoolean("status")
+                ));
+                totalQuantity.add(resultSet.getInt(9));
+            }
+
+            if (products.isEmpty()) {
+                return null;
+            } else {
+                map.put(totalQuantity, products);
+                return map;
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
