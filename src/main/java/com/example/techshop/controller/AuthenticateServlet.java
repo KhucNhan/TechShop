@@ -82,38 +82,81 @@ public class AuthenticateServlet extends HttpServlet {
         String gender = req.getParameter("gender");
         String dateOfBirth = req.getParameter("dateOfBirth");
 
-        String message = "";
+        RequestDispatcher dispatcher;
+
+        String message = "Not null requirement";
         if (name.isEmpty()) {
-            message = "x";
-            req.setAttribute("nameMessage", message);
+            req.setAttribute("message", message);
+            dispatcher = req.getRequestDispatcher("authenticate/signup.jsp");
+
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
         }
 
         if (username.length() < 8) {
-            message = "x";
-            req.setAttribute("usernameMessage", message);
+            message = "Username must have at least 8 character";
+            req.setAttribute("message", message);
+            dispatcher = req.getRequestDispatcher("authenticate/signup.jsp");
+
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
         }
 
         if (password.length() < 8) {
-            message = "x";
-            req.setAttribute("passwordMessage", message);
+            message = "Username must have at least 8 character";
+            req.setAttribute("message", message);
+            dispatcher = req.getRequestDispatcher("authenticate/signup.jsp");
+
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
         }
 
         if (gender == null) {
-            message = "x";
-            req.setAttribute("genderMessage", message);
+            req.setAttribute("message", message);
+            dispatcher = req.getRequestDispatcher("authenticate/signup.jsp");
+
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
         }
 
         if (dateOfBirth.isEmpty()) {
-            message = "x";
-            req.setAttribute("dateMessage", message);
+            req.setAttribute("message", message);
+            dispatcher = req.getRequestDispatcher("authenticate/signup.jsp");
+
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
         }
 
-        if (message.isEmpty()) {
+        if (dao.checkLogin(username, password) == null) {
             User signupUser = new User(name, username, password, gender, Date.valueOf(dateOfBirth));
             dao.insertUser(signupUser);
+            message = "Signup success";
+        } else {
+            message = "This username has exist";
         }
 
-        RequestDispatcher dispatcher = req.getRequestDispatcher("authenticate/signup.jsp");
+        req.setAttribute("message", message);
+        dispatcher = req.getRequestDispatcher("authenticate/signup.jsp");
 
         try {
             dispatcher.forward(req, resp);
@@ -122,27 +165,29 @@ public class AuthenticateServlet extends HttpServlet {
         }
     }
 
-    private void login(HttpServletRequest req, HttpServletResponse resp) {
+    private void login(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
+
+        if (username.length() < 8 || password.length() < 8) {
+            req.setAttribute("message", "Username and Password must have at least 8 character");
+            req.getRequestDispatcher("authenticate/login.jsp").forward(req, resp);
+            return;
+        }
+
         User currentUser = dao.checkLogin(username, password);
 
-        try {
-            if (currentUser != null && currentUser.isStatus()) {
-                HttpSession session = req.getSession();
-                session.setAttribute("currentUserID", currentUser.getUserID());
-                Map<Integer, OrderDetails> cart = new HashMap<>();
-                session.setAttribute("cart", cart);
-                session.setAttribute("cartItemCount", cart.size());
-                resp.sendRedirect("products");
-            } else {
-                req.setAttribute("message", "Password incorrect or username doesn't exist.");
-                req.getRequestDispatcher("authenticate/login.jsp").forward(req, resp);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ServletException e) {
-            throw new RuntimeException(e);
+
+        if (currentUser != null && currentUser.isStatus()) {
+            HttpSession session = req.getSession();
+            session.setAttribute("currentUserID", currentUser.getUserID());
+            Map<Integer, OrderDetails> cart = new HashMap<>();
+            session.setAttribute("cart", cart);
+            session.setAttribute("cartItemCount", cart.size());
+            resp.sendRedirect("products");
+        } else {
+            req.setAttribute("message", "Password incorrect or username doesn't exist.");
+            req.getRequestDispatcher("authenticate/login.jsp").forward(req, resp);
         }
     }
 

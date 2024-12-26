@@ -15,6 +15,10 @@
     <link rel="stylesheet" href="/css/menu_footer.css">
     <title>Edit user</title>
     <style>
+        body {
+            background-image: url("https://files.oaiusercontent.com/file-CCSV4pxxgouJe9ymj4qgdj?se=2024-12-26T09%3A09%3A32Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D08c74b3f-e0f2-4eab-b3e6-c946c68c5adc.webp&sig=QAdTrnl2M4hV2vBft3S5x71zqiQtPbU3zR%2BLYG70bOM%3D");
+        }
+
         .container span, label {
             width: 20%;
         }
@@ -32,7 +36,14 @@
             border-radius: 8px;
         }
 
-        .container .row {
+        .container {
+            height: 100%;
+            align-content: center;
+            justify-items: center;
+        }
+
+        .row {
+            width: 100%;
             justify-content: center;
         }
     </style>
@@ -93,7 +104,7 @@
 %>
 
 <% if (message != null) { %>
-<div style="position: fixed; top: 80px; left: 20px; z-index: 1050; width: auto;"
+<div style="position: fixed; top: 80px; left: 20px; z-index: 1050; width: auto; position-area: top;background-color: #ffffff75;"
      class="alert alert-<%= alertType %> alert-dismissible fade show" role="alert">
     <%= message %>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
