@@ -12,15 +12,21 @@
             background-image: url("https://files.oaiusercontent.com/file-CCSV4pxxgouJe9ymj4qgdj?se=2024-12-26T09%3A09%3A32Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D08c74b3f-e0f2-4eab-b3e6-c946c68c5adc.webp&sig=QAdTrnl2M4hV2vBft3S5x71zqiQtPbU3zR%2BLYG70bOM%3D");
         }
 
-        .container  span, label {
+        .container {
+            height: 100%;
+            align-content: center;
+            justify-items: center;
+        }
+
+        .container span, label {
             width: 20%;
         }
 
-        .container  input, select {
+        .container input, select {
             width: 70%;
         }
 
-        .container  form {
+        .container form {
             width: 100%;
             text-align: center;
             background-color: #4B5563;
@@ -29,7 +35,8 @@
             border-radius: 8px;
         }
 
-        .container  .row {
+        .row {
+            width: 100%;
             justify-content: center;
         }
     </style>

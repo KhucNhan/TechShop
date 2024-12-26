@@ -47,40 +47,47 @@
 
 <div class="container" style="margin-bottom: 3vh; padding-top:11vh">
     <div class="row">
-        
+
         <div class="col-md-6">
             <form action="/products?action=edit&productID=${product.productID}" method="post">
 
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">Image</span>
-                    <input value="${product.image}" name="image" type="text" class="form-control" placeholder="Image url" aria-label="Image url" aria-describedby="basic-addon1">
+                    <input value="${product.image}" name="image" type="text" class="form-control"
+                           placeholder="Image url" aria-label="Image url" aria-describedby="basic-addon1">
                 </div>
 
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon2">Name</span>
-                    <input value="${product.name}" name="name" type="text" class="form-control" placeholder="Name" aria-label="Name" aria-describedby="basic-addon1">
+                    <input value="${product.name}" name="name" type="text" class="form-control" placeholder="Name"
+                           aria-label="Name" aria-describedby="basic-addon1">
                 </div>
 
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon3">Description</span>
-                    <input value="${product.description}" name="description" type="text" class="form-control" placeholder="Description" aria-label="Description" aria-describedby="basic-addon1">
+                    <input value="${product.description}" name="description" type="text" class="form-control"
+                           placeholder="Description" aria-label="Description" aria-describedby="basic-addon1">
                 </div>
 
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon4">Price</span>
-                    <input value="<fmt:formatNumber value="${product.price}" pattern="####"/>" name="price" type="number" class="form-control" placeholder="Price" aria-label="Price" aria-describedby="basic-addon1">
+                    <input value="<fmt:formatNumber value="${product.price}" pattern="####"/>" name="price"
+                           type="number" class="form-control" placeholder="Price" aria-label="Price"
+                           aria-describedby="basic-addon1">
                 </div>
 
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon5">Quantity</span>
-                    <input value="${product.quantity}" name="quantity" type="number" class="form-control" placeholder="Quantity" aria-label="Quantity" aria-describedby="basic-addon1">
+                    <input value="${product.quantity}" name="quantity" type="number" class="form-control"
+                           placeholder="Quantity" aria-label="Quantity" aria-describedby="basic-addon1">
                 </div>
 
                 <div class="input-group mb-3">
                     <label class="input-group-text" for="inputGroupSelect01">Category</label>
                     <select class="form-select" id="inputGroupSelect01" name="categoryID">
                         <c:forEach items="${categories}" var="category">
-                            <option ${product.status ? 'selected' : ''} value="${category.categoryID}">${category.name}</option>
+                            <option ${product.status ? 'selected' : ''}
+                                    value="${category.categoryID}">${category.name}</option>
                         </c:forEach>
                     </select>
                 </div>
@@ -90,7 +97,7 @@
                 <button class="btn btn-primary" type="submit">Update Product</button>
             </form>
         </div>
-        
+
     </div>
 </div>
 
@@ -99,7 +106,8 @@
 %>
 
 <% if (message != null) { %>
-<div style="position: fixed; top: 80px; left: 20px; z-index: 1050; width: auto; position-area: top;background-color: #ffffff75;" class="alert alert-<%= alertType %> alert-dismissible fade show" role="alert">
+<div style="position: fixed; top: 80px; left: 20px; z-index: 1050; width: auto; position-area: top;background-color: #ffffff75;"
+     class="alert alert-<%= alertType %> alert-dismissible fade show" role="alert">
     <%= message %>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
