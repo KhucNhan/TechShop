@@ -171,8 +171,16 @@ public class CartServlet extends HttpServlet {
     }
 
     private void changeQuantity(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int quantity = Integer.parseInt(req.getParameter("quantity"));
+        String quantityStr = req.getParameter("quantity");
         int productID = Integer.parseInt(req.getParameter("productID"));
+
+        if (quantityStr == null || quantityStr.isEmpty()) {
+            req.setAttribute("productID", productID);
+            req.getRequestDispatcher("/delete-from-cart").forward(req, resp);
+            return;
+        }
+
+        int quantity = Integer.parseInt(quantityStr);
         Product product = dao.selectProduct(productID);
 
         HttpSession session = req.getSession();
