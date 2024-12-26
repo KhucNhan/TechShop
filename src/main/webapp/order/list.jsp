@@ -8,13 +8,47 @@
     <link rel="stylesheet" href="/css/menu_footer.css">
     <link rel="stylesheet" href="/css/table.css">
     <title>Order</title>
+    <style>
+        .container  span, label {
+            width: 20%;
+        }
+
+        .container  input, select {
+            width: 70%;
+        }
+
+        .container  form {
+            width: 100%;
+            text-align: center;
+            background-color: #4B5563;
+            border: 2px solid #3B82F6;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .container  .row {
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
-<jsp:include page="/menuAdmin.jsp"></jsp:include>
+<jsp:include page="${user.role == 'admin' ? '/menuAdmin.jsp' : '/menu.jsp'}"/>
 
 <div class="container" style="margin-bottom: 3vh; padding-top:11vh">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" style="text-align: -webkit-center;">
+            <form method="get" action="orders" style="width: 100%; text-align: center; width: 55%; text-align: center; margin-block: 3vh; padding: 1vh; border: 1px solid; background-color: #4B5563; border-radius: 8px;" class="d-flex justify-content-around">
+                <div style="margin-inline: 2vw; align-content: center">
+                    <label style="font-weight: bold; font-size: large; margin-right: 5px;" for="start">From: </label>
+                    <input style="border-radius: 8px; border: 1px; padding-left: 1vw;" id="start" name="start" type="datetime-local">
+                </div>
+                <div style="margin-inline: 2vw; align-content: center">
+                    <label style="font-weight: bold; font-size: large; margin-right: 5px;" for="end">To: </label>
+                    <input style="border-radius: 8px; border: 1px; padding-left: 1vw;" id="end" name="end" type="datetime-local">
+                </div>
+                <input hidden="hidden" name="action" value="filter">
+                <button class="btn btn-light" style="color: black" type="submit">Filter</button>
+            </form>
             <table class="table" style="width: 100%;">
                 <thead style="place-items: stretch; max-height: 6vh; display: block; text-transform: uppercase; width: 100%;">
                 <tr style="height: 100%">
@@ -32,16 +66,27 @@
                         <td style="width: 10%">${orderItem.orderID}</td>
                         <td style="width: 10%">
                             <label style="width: 10%;">
-                                    ${orderItem.userName}
-                        </label>
+                                <c:set var="role" value="${user.role}"/>
+
+                                <c:choose>
+                                    <c:when test="${role == 'admin'}">
+                                        ${orderItem.userName}
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${user.name}
+                                    </c:otherwise>
+                                </c:choose>
+                            </label>
                         </td>
                         <td style="width: 20%">${orderItem.orderDate}</td>
                         <td style="width: 20%"><fmt:formatNumber value="${orderItem.total}" pattern="#,###"/> VND</td>
                         <td style="width: 10%">${orderItem.status}</td>
                         <td style="width: 30%">
-                            <a href="/orders?action=accept&orderID=${orderItem.orderID}" class="btn btn-primary ${orderItem.status == 'Pending' ? '' : 'disabled'}">Accept</a>
+                            <a href="/orders?action=accept&orderID=${orderItem.orderID}"
+                               class="btn btn-primary ${orderItem.status == 'Pending' ? '' : 'disabled'}" ${user.role != 'admin' ? 'hidden' : ''}>Accept</a>
 
-                            <a style="margin-inline: 10px;" href="/orders?action=cancel&orderID=${orderItem.orderID}" class="btn btn-warning ${orderItem.status == 'Pending' ? '' : 'disabled'}">Cancel</a>
+                            <a style="margin-inline: 10px;" href="/orders?action=cancel&orderID=${orderItem.orderID}"
+                               class="btn btn-warning ${orderItem.status == 'Pending' ? '' : 'disabled'}"   ${user.role != 'admin' ? 'hidden' : ''}>Cancel</a>
 
                             <a href="/orders?action=detail&orderID=${orderItem.orderID}" class="btn btn-info">Detail</a>
                         </td>
@@ -52,5 +97,16 @@
         </div>
     </div>
 </div>
+
+<% String message = (String) request.getAttribute("message");
+    String alertType = (String) request.getAttribute("alertType");
+%>
+
+<% if (message != null) { %>
+<div style="position: fixed; top: 80px; left: 20px; z-index: 1050; width: auto;" class="alert alert-<%= alertType %> alert-dismissible fade show" role="alert">
+    <%= message %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<% } %>
 </body>
 </html>

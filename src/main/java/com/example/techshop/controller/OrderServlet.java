@@ -6,6 +6,7 @@ import com.example.techshop.model.Product;
 import com.example.techshop.model.User;
 import com.example.techshop.service.DAO;
 import com.sun.org.apache.xpath.internal.operations.Or;
+import jdk.vm.ci.meta.Local;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,11 +51,55 @@ public class OrderServlet extends HttpServlet {
             case "detail":
                 showOrderDetail(req, resp);
                 break;
+            case "filter":
+                filterOrder(req, resp);
+                break;
             default:
                 showAllOrders(req, resp);
                 break;
         }
     }
+
+    protected void filterOrder(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String start = req.getParameter("start");
+        String end = req.getParameter("end");
+
+        List<Order> orders = dao.selectAllOrders();
+        List<Order> filteredOrders = new ArrayList<>();
+        if (start != null && end != null && !start.isEmpty() && !end.isEmpty()) {
+            LocalDateTime startTime = LocalDateTime.parse(start.replace("T", " ") + ":00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            LocalDateTime endTime = LocalDateTime.parse(end.replace("T", " ") + ":59", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            
+            for(Order order : orders) {
+                LocalDateTime orderDate = order.getOrderDate();
+                if (orderDate.isAfter(startTime) && orderDate.isBefore(endTime)) {
+                    filteredOrders.add(order);
+                }
+            }
+
+            if (filteredOrders.isEmpty()) {
+                req.setAttribute("message", "There are no order between this time");
+                req.setAttribute("alertType", "alert");
+                req.setAttribute("orders", orders);
+            } else {
+                req.setAttribute("orders", filteredOrders);
+            }
+
+        } else {
+            req.setAttribute("message", "Not null requirement");
+            req.setAttribute("alertType", "warning");
+            req.setAttribute("orders", orders);
+        }
+
+        HttpSession session = req.getSession();
+        int userID = (int) session.getAttribute("currentUserID");
+        User user = dao.selectUser(userID);
+        req.setAttribute("user", user);
+
+        RequestDispatcher dispatcher = req.getRequestDispatcher("order/list.jsp");
+        dispatcher.forward(req, resp);
+    }
+
 
     private void showOrderDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int orderID = Integer.parseInt(req.getParameter("orderID"));
@@ -102,16 +149,15 @@ public class OrderServlet extends HttpServlet {
         User user = dao.selectUser(userID);
         RequestDispatcher dispatcher;
 
+        List<Order> orders;
         if (user.getRole().equalsIgnoreCase("admin")) {
-            List<Order> orders = dao.selectAllOrders();
-            req.setAttribute("orders", orders);
-            dispatcher = req.getRequestDispatcher("order/list.jsp");
+            orders = dao.selectAllOrders();
         } else {
-            List<Order> orders = dao.selectAllOrdersByUser(userID);
-            req.setAttribute("orders", orders);
-            req.setAttribute("user", user);
-            dispatcher = req.getRequestDispatcher("web/order.jsp");
+            orders = dao.selectAllOrdersByUser(userID);
         }
+        req.setAttribute("orders", orders);
+        req.setAttribute("user", user);
+        dispatcher = req.getRequestDispatcher("order/list.jsp");
 
         try {
             dispatcher.forward(req, resp);

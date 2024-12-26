@@ -1,11 +1,12 @@
 package com.example.techshop.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Order {
     private int orderID;
     private int userID;
-    private Date orderDate;
+    private LocalDateTime orderDate;
     private double total;
     private String status;
     private String userName;
@@ -29,11 +30,11 @@ public class Order {
         this.userID = userID;
     }
 
-    public Date getOrderDate() {
+    public LocalDateTime getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
 
@@ -53,7 +54,7 @@ public class Order {
         this.status = status;
     }
 
-    public Order(int orderID, int userID, Date orderDate, double total, String status) {
+    public Order(int orderID, int userID, LocalDateTime orderDate, double total, String status) {
         this.orderID = orderID;
         this.userID = userID;
         this.orderDate = orderDate;
@@ -69,7 +70,7 @@ public class Order {
         this.userName = userName;
     }
 
-    public Order(int orderID, int userID, Date orderDate, double total, String status, String userName) {
+    public Order(int orderID, int userID, LocalDateTime orderDate, double total, String status, String userName) {
         this.orderID = orderID;
         this.userID = userID;
         this.orderDate = orderDate;
