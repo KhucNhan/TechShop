@@ -60,7 +60,7 @@
                     <th style="width: 30%">Actions</th>
                 </tr>
                 </thead>
-                <tbody style="width: 100%;">
+                <tbody style="width: 100%; height: 60vh">
                 <c:forEach items="${orders}" var="orderItem">
                     <tr style="width: 100%;" class="d-flex">
                         <td style="width: 10%">${orderItem.orderID}</td>

@@ -34,14 +34,14 @@ public class SearchServlet extends HttpServlet {
         RequestDispatcher requestDispatcher;
 
         if (user.getRole().equalsIgnoreCase("admin")) {
-            if (servletPath.contains("product")) {
-                products = dao.adminSearchProduct(value);
-                req.setAttribute("products", products);
-                requestDispatcher = req.getRequestDispatcher("product/list.jsp");
-            } else {
+            if (servletPath.contains("user")) {
                 List<User> users = dao.searchUserByName(value);
                 req.setAttribute("users", users);
                 requestDispatcher = req.getRequestDispatcher("user/list.jsp");
+            } else {
+                products = dao.adminSearchProduct(value);
+                req.setAttribute("products", products);
+                requestDispatcher = req.getRequestDispatcher("product/list.jsp");
             }
         } else {
             products = dao.userSearchProduct(value);

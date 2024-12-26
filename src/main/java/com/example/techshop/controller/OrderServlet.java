@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet(name = "OrderServlet", value = "/orders")
 public class OrderServlet extends HttpServlet {
@@ -128,8 +129,25 @@ public class OrderServlet extends HttpServlet {
         order.setStatus("Paid");
         dao.updateOrder(orderID, order);
 
+        HttpSession session = req.getSession();
+        int userID = (Integer) session.getAttribute("currentUserID");
+        User user = dao.selectUser(userID);
+
+        List<OrderDetails> orderDetails = dao.selectOrderdetailsByOrderID(orderID);
+        List<Product> products = dao.selectAllProducts();
+
+        for (OrderDetails od : orderDetails) {
+            for (Product product : products) {
+                if (od.getProduct().getProductID() == product.getProductID()) {
+                    product.setQuantity(product.getQuantity() - od.getQuantity());
+                    dao.updateProduct(product.getProductID(), product);
+                }
+            }
+        }
+
         List<Order> orders = dao.selectAllOrders();
         req.setAttribute("orders", orders);
+        req.setAttribute("user", user);
         req.getRequestDispatcher("order/list.jsp").forward(req, resp);
     }
     private void cancelOrder(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -138,8 +156,13 @@ public class OrderServlet extends HttpServlet {
         order.setStatus("Canceled");
         dao.updateOrder(orderID, order);
 
+        HttpSession session = req.getSession();
+        int userID = (Integer) session.getAttribute("currentUserID");
+        User user = dao.selectUser(userID);
+
         List<Order> orders = dao.selectAllOrders();
         req.setAttribute("orders", orders);
+        req.setAttribute("user", user);
         req.getRequestDispatcher("order/list.jsp").forward(req, resp);
     }
 

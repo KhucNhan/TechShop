@@ -7,6 +7,7 @@ import com.example.techshop.model.User;
 import com.sun.org.apache.xpath.internal.operations.Or;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface IDAO {
@@ -57,4 +58,6 @@ public interface IDAO {
     List<Product> adminSearchProduct(String value);
     List<User> searchUserByName(String value);
 
+    Map<List<Double>, List<Product>> getBestSellProduct(int numberOfProduct);
+    Map<List<Integer>, List<Product>> getBestSellProductByQuantity(int numberOfProduct);
 }

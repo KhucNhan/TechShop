@@ -17,7 +17,6 @@
 
 <div class="container" style="margin-bottom: 3vh; padding-top:11vh">
     <div class="row">
-<%--        <div class="col-md"></div>--%>
         <div class="col-md-12">
             <div class="row g-4 text-center row-cols-5">
                 <c:forEach items="${requestScope['products']}" var="product">
@@ -44,7 +43,6 @@
                 </c:forEach>
             </div>
         </div>
-<%--        <div class="col-md-1"></div>--%>
     </div>
 </div>
 

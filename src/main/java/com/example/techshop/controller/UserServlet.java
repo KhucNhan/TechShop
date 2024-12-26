@@ -57,10 +57,25 @@ public class UserServlet extends HttpServlet {
             case "changePassword":
                 showChangePassword(req, resp);
                 break;
+            case "deleteAccount":
+                deleteAccount(req, resp);
+                break;
             default:
                 showAllUsers(req, resp);
                 break;
         }
+    }
+
+    private void deleteAccount(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        HttpSession session = req.getSession();
+        int id = (Integer) session.getAttribute("currentUserID");
+        User user = dao.selectUser(id);
+
+        user.setStatus(false);
+        dao.updateUser(id, user);
+
+        session.invalidate();
+        resp.sendRedirect("authenticate/login.jsp");
     }
 
     private void showActiveUser(HttpServletRequest req, HttpServletResponse resp) {
@@ -79,7 +94,10 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    private void showChangePassword(HttpServletRequest req, HttpServletResponse resp) {
+    private void showChangePassword(HttpServletRequest req, HttpServletResponse resp) {HttpSession session = req.getSession();
+        int id = (Integer) session.getAttribute("currentUserID");
+        User user = dao.selectUser(id);
+        req.setAttribute("user", user);
         RequestDispatcher dispatcher = req.getRequestDispatcher("user/changePassword.jsp");
         try {
             dispatcher.forward(req, resp);

@@ -26,15 +26,19 @@
                 <li class="nav-item">
                     <a class="nav-link" href="orders">History</a>
                 </li>
-                <li style="position: relative; left: 100px;" class="nav-item align-items-center">
-                    <form action="/search?servletPath=${pageContext.request.servletPath}" style="margin: 0" class="d-flex align-items-center" role="search">
+                <li class="nav-item">
+                    <a class="nav-link" href="statistical">Top seller</a>
+                </li>
+                <li style="position: relative; left: 60px;" class="nav-item align-items-center">
+                    <form action="/search?servletPath=${pageContext.request.servletPath}" style="margin: 0"
+                          class="d-flex align-items-center" role="search">
                         <input style="width: 40rem; background-color: lightgrey; border:1px solid black"
                                class="form-control me-2" type="search" placeholder="Search"
                                aria-label="Search" name="value">
                         <button class="btn btn-success" type="submit">Search</button>
                     </form>
                 </li>
-                <li class="nav-item" style="position: relative; left: 250px;">
+                <li class="nav-item" style="position: relative; left: 167px;">
                     <a href="/cart?action=goToCart" class="nav-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                              class="bi bi-cart3" viewBox="0 0 16 16">
@@ -42,7 +46,7 @@
                         </svg>
                     </a>
                 </li>
-                <li class="nav-item dropdown d-flex" style="position: relative; left: 250px;">
+                <li class="nav-item dropdown d-flex" style="position: relative; left: 167px;">
                     <a id="cartIcon" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                        aria-expanded="false">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
@@ -56,6 +60,8 @@
                             account</a></li>
                         <li><a style="color: black" class="dropdown-item" href="/users?action=changePassword">Change
                             password</a></li>
+                        <li><a style="color: black" class="dropdown-item" onclick="showPrompt()">Delete
+                            account</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -66,5 +72,32 @@
             </ul>
         </div>
     </div>
-    <label for="cartIcon" class="rounded-circle text-center" style="background-color: red;position: fixed; right: 90px; top: 15px; height: 20px; width: 20px; color: white; font-weight: bold; font-size: 13px">${sessionScope['cartItemCount'] == null ? '0' : sessionScope['cartItemCount']}</label>
+    <label for="cartIcon" class="rounded-circle text-center"
+           style="background-color: red;position: fixed; right: 90px; top: 15px; height: 20px; width: 20px; color: white; font-weight: bold; font-size: 13px">${sessionScope['cartItemCount'] == null ? '0' : sessionScope['cartItemCount']}</label>
 </nav>
+
+<div class="modal fade" id="promptModal" tabindex="-1" aria-labelledby="promptModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="promptModalLabel" style="color: red">Delete account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label style="color: black">Are you sure to delete your account ?</label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a type="button" class="btn btn-primary" href="/users?action=deleteAccount">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Hiển thị modal prompt
+    function showPrompt() {
+        const promptModal = new bootstrap.Modal(document.getElementById('promptModal'));
+        promptModal.show();
+    }
+</script>
