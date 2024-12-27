@@ -31,7 +31,7 @@ public class DAO implements IDAO {
     private static final String INSERT_PRODUCTS_SQL = "INSERT INTO Products (name, description, price, quantity, categoryID) VALUES (?, ?, ?, ?, ?);";
     private static final String INSERT_PRODUCTS_WITH_IMG_SQL = "INSERT INTO Products (image, name, description, price, quantity, categoryID) VALUES (?, ?, ?, ?, ?, ?);";
     private static final String SELECT_PRODUCT_BY_ID = "select * from products where productID =?";
-    private static final String SELECT_ALL_PRODUCTS = "select * from products";
+    private static final String SELECT_ALL_PRODUCTS = "select * from products group by productID order by productID desc";
     private static final String SELECT_ACTIVE_PRODUCTS = "select * from products where status = true";
     private static final String DELETE_PRODUCTS_SQL = "update products set status = false where productID = ?;";
     private static final String UPDATE_PRODUCTS_SQL = "update products set image = ?, name = ?, description = ?, price = ?, quantity = ?, categoryID = ?, status = ? where productID = ?;";
@@ -41,7 +41,7 @@ public class DAO implements IDAO {
 
     private static final String INSERT_NEW_ORDER = "insert into orders (userID, orderDate, total) value (?, ?, ?)";
     private static final String INSERT_NEW_ORDERDETAIL = "insert into orderdetails (orderID, productID, quantity, price, totalPrice) values (?, ?, ?, ?, ?)";
-    private static final String SELECT_ALL_ORDERS = "select o.orderID, o.userID, o.orderDate, o.total, o.status, u.name from orders o join users u on o.userID = u.userID";
+    private static final String SELECT_ALL_ORDERS = "select o.orderID, o.userID, o.orderDate, o.total, o.status, u.name from orders o join users u on o.userID = u.userID group by orderID order by orderID desc";
     private static final String SELECT_ORDER = "select * from orders where orderId = ?";
     private static final String SELECT_ORDERS_BY_USERID = "select * from orders where userID = ?";
 

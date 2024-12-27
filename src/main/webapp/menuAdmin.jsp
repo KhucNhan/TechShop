@@ -33,9 +33,9 @@
                     <form action="/search" style="margin: 0" class="d-flex align-items-center" role="search">
                         <input style="width: 40rem; background-color: lightgrey; border:1px solid black"
                                class="form-control me-2" type="search" placeholder="Search"
-                               aria-label="Search" name="value">
+                               aria-label="Search" name="value" oninput="submitSearch()">
                         <input name="servletPath" hidden="hidden" value="${pageContext.request.servletPath}">
-                        <button class="btn btn-success" type="submit">Search</button>
+                        <button id="searchBtn" class="btn btn-success" type="submit">Search</button>
                     </form>
                 </li>
                 <li class="nav-item dropdown d-flex" style="position: relative; left: 280px;">
@@ -90,5 +90,11 @@
     function showPrompt() {
         const promptModal = new bootstrap.Modal(document.getElementById('promptModal'));
         promptModal.show();
+    }
+
+    function submitSearch() {
+        setTimeout(() => {
+            document.querySelector('form[role="search"]').submit();
+        }, 1500);
     }
 </script>
