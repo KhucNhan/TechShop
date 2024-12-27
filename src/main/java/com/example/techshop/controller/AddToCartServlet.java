@@ -67,6 +67,9 @@ public class AddToCartServlet extends HttpServlet {
         }
         List<Product> products = dao.selectActiveProducts();
         req.setAttribute("products", products);
+        req.setAttribute("message", "Add to cart success");
+        req.setAttribute("alertType", "success");
+        req.setAttribute("userAction", true);
         req.getRequestDispatcher("web/product.jsp").forward(req, resp);
     }
 }
