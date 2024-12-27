@@ -24,7 +24,7 @@
 </head>
 <body>
 <jsp:include page="/menu.jsp"></jsp:include>
-<c:if test="${userIsSearching == false || userIsSearching == null}">
+<c:if test="${userAction == false || userAction == null}">
     <div id="carouselExampleCaptions" class="carousel slide">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -92,5 +92,16 @@
 </div>
 
 <jsp:include page="/footer.jsp"></jsp:include>
+
+<% String message = (String) request.getAttribute("message");
+    String alertType = (String) request.getAttribute("alertType");
+%>
+
+<% if (message != null) { %>
+<div style="position: fixed; top: 80px; left: 20px; z-index: 1050;width: auto; position-area: top;" class="alert alert-<%= alertType %> alert-dismissible fade show" role="alert">
+    <%= message %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<% } %>
 </body>
 </html>
