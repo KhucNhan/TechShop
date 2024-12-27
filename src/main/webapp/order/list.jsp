@@ -1,3 +1,5 @@
+<%@ page import="com.example.techshop.model.Order" %>
+<%@ page import="java.util.List" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
@@ -64,7 +66,15 @@
                     <th style="width: 30%">Actions</th>
                 </tr>
                 </thead>
-                <tbody style="width: 100%; height: 60vh">
+                <tbody style="width: 100%; height: 60vh; background-color: #4B5563">
+                <%
+                    List<Order> orders = (List<Order>) session.getAttribute("orders");
+                    int size = (orders != null) ? orders.size() : 0;
+                    request.setAttribute("size", size);
+                %>
+                <c:if test="${size == 0 && user.role != 'admin'}">
+                    <h1 style="position: fixed; top:350px; left: 0; text-align: center; width: 100%">You don't have any product in your cart</h1>
+                </c:if>
                 <c:forEach items="${orders}" var="orderItem">
                     <tr style="width: 100%;" class="d-flex">
                         <td style="width: 10%">${orderItem.orderID}</td>
