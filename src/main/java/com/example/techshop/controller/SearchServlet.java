@@ -45,6 +45,7 @@ public class SearchServlet extends HttpServlet {
             }
         } else {
             products = dao.userSearchProduct(value);
+            req.setAttribute("userIsSearching", true);
             req.setAttribute("products", products);
             requestDispatcher = req.getRequestDispatcher("web/product.jsp");
         }

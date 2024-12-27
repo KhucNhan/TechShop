@@ -1,3 +1,5 @@
+<%@ page import="com.example.techshop.model.OrderDetails" %>
+<%@ page import="java.util.Map" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -23,7 +25,8 @@
         <div class="col-md-12">
             <div class="overflow-y-auto" style="max-height: 76vh; width: 100%">
                 <table class="table" style="width: 100%; background-color: #4B5563;">
-                    <thead class="table-light" style="display: block; width: 100%; background-color: #f37979; text-transform: uppercase">
+                    <thead class="table-light"
+                           style="display: block; width: 100%; background-color: #f37979; text-transform: uppercase">
                     <tr style="width: 100%; height: 6vh; font-weight: bold">
                         <td style="width: 5%" class="text-center align-content-center">Select</td>
                         <td style="width: 15%;" class="text-center align-content-center">Image</td>
@@ -36,6 +39,14 @@
                     </thead>
 
                     <tbody class="tbody" style="overflow-y: auto;display: block;height: 74vh; width: 100%">
+                    <%
+                        Map<Integer, OrderDetails> cart = (Map<Integer, OrderDetails>) session.getAttribute("cart");
+                        int size = (cart != null) ? cart.size() : 0;
+                        request.setAttribute("size", size);
+                    %>
+                    <c:if test="${size == 0}">
+                        <h1 style="position: fixed; top:250px; left: 0; text-align: center; width: 100%">You don't have any product in your cart</h1>
+                    </c:if>
                     <c:forEach items="${sessionScope['cart']}" var="cartItem">
                         <tr style="width: 100%;">
                             <td style="width: 5%" class="text-center align-content-center">
@@ -48,8 +59,9 @@
                                 </form>
 
                             </td>
-                            <td style="width: 15%" class="text-center align-content-center"><img style="height: 16vh; width: 100%"
-                                                                              src="${cartItem.value.product.image}">
+                            <td style="width: 15%" class="text-center align-content-center"><img
+                                    style="height: 16vh; width: 100%"
+                                    src="${cartItem.value.product.image}">
                             </td>
                             <td style="width: 20%" class="align-content-center">${cartItem.value.product.name}</td>
                             <td style="width: 15%" class="text-center align-content-center"><fmt:formatNumber
@@ -116,7 +128,8 @@
                             <fmt:formatNumber
                                     value="${total}" pattern="#,###"/> VND
                         </label>
-                        <button class="btn btn-success buy" type="submit" style="margin-inline: 20px; font-size: x-large">Buy
+                        <button class="btn btn-success buy" type="submit"
+                                style="margin-inline: 20px; font-size: x-large">Buy
                         </button>
                     </form>
                 </div>
@@ -124,6 +137,18 @@
         </div>
     </div>
 </div>
+
+<% String message = (String) request.getAttribute("message");
+    String alertType = (String) request.getAttribute("alertType");
+%>
+
+<% if (message != null) { %>
+<div style="position: fixed; top: 80px; left: 20px; z-index: 1050; width: auto; position-area: top;"
+     class="alert alert-<%= alertType %> alert-dismissible fade show" role="alert">
+    <%= message %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<% } %>
 
 <script>
     function submitQuantity() {

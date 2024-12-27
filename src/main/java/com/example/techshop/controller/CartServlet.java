@@ -95,6 +95,19 @@ public class CartServlet extends HttpServlet {
         HttpSession session = req.getSession();
         Map<Integer, OrderDetails> cart = (Map<Integer, OrderDetails>) session.getAttribute("cart");
 
+        if (cart == null || cart.isEmpty()) {
+            req.setAttribute("message", "You don't have anything in your cart.");
+            req.setAttribute("alertType", "warning");
+            session.setAttribute("cartItemCount", 0);
+            RequestDispatcher dispatcher = req.getRequestDispatcher("web/cart.jsp");
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+        }
+
         Order order = new Order();
         order.setUserID((Integer) session.getAttribute("currentUserID"));
         order.setTotal(sendTotal(req, resp));
