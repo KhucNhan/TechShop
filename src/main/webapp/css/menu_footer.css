@@ -43,10 +43,14 @@ body {
     margin: 0 10px; /* Tạo khoảng cách giữa các mục */
 }
 
-.alert-alert ,.alert-warning {
-    background-color: rgba(255, 233, 0, 0.7);
+.alert-alert {
+    background-color: rgba(255, 233, 0, 0.9);
+}
+
+.alert-warning {
+    background-color: rgba(255, 233, 0, 0.9);
 }
 
 .alert-success {
-    background-color: rgba(81, 255, 60, 0.7);
+    background-color: rgba(81, 255, 60, 0.9);
 }

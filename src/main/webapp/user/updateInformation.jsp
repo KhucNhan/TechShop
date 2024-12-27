@@ -104,7 +104,7 @@
 %>
 
 <% if (message != null) { %>
-<div style="position: fixed; top: 80px; left: 20px; z-index: 1050; width: auto; position-area: top;background-color: #ffffff75;"
+<div style="position: fixed; top: 80px; left: 20px; z-index: 1050; width: auto; position-area: top;"
      class="alert alert-<%= alertType %> alert-dismissible fade show" role="alert">
     <%= message %>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

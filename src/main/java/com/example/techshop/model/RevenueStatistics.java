@@ -1,16 +1,16 @@
 package com.example.techshop.model;
 
 public class RevenueStatistics {
-    private int month;
+    private int time;
     private double totalRevenue;
 
-    public RevenueStatistics(int month, double totalRevenue) {
-        this.month = month;
+    public RevenueStatistics(int time, double totalRevenue) {
+        this.time = time;
         this.totalRevenue = totalRevenue;
     }
 
-    public int getMonth() {
-        return month;
+    public int gettime() {
+        return time;
     }
 
     public double getTotalRevenue() {
