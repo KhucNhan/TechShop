@@ -38,6 +38,14 @@
                 </div>
             </div>
 
+            <!-- Password -->
+            <div class="mb-3">
+                <label for="rePassword" class="form-label">Re-Enter password</label>
+                <div class="input-group">
+                    <input type="password" class="form-control" id="rePassword" name="rePassword" required>
+                </div>
+            </div>
+
             <!-- Gender -->
             <div class="mb-3 d-flex">
                 <label class="form-label">Gender</label>

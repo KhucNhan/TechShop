@@ -79,6 +79,7 @@ public class AuthenticateServlet extends HttpServlet {
         String name = req.getParameter("name");
         String username = req.getParameter("username");
         String password = req.getParameter("password");
+        String rePassword = req.getParameter("rePassword");
         String gender = req.getParameter("gender");
         String dateOfBirth = req.getParameter("dateOfBirth");
 
@@ -110,8 +111,19 @@ public class AuthenticateServlet extends HttpServlet {
             return;
         }
 
-        if (password.length() < 8) {
-            message = "Username must have at least 8 character";
+        if (password.length() < 8 || rePassword.length() < 8) {
+            message = "Password must have at least 8 character";
+            req.setAttribute("message", message);
+            dispatcher = req.getRequestDispatcher("authenticate/signup.jsp");
+
+            try {
+                dispatcher.forward(req, resp);
+            } catch (ServletException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+        } else if (!password.equals(rePassword)) {
+            message = "Incorrect password";
             req.setAttribute("message", message);
             dispatcher = req.getRequestDispatcher("authenticate/signup.jsp");
 
