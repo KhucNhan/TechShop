@@ -22,9 +22,10 @@
 
 <div class="container" style="margin-bottom: 3vh; padding-top:11vh">
     <div class="row">
+        <a href="/products?action=#" style=" width: fit-content;position: fixed; top:10vh; left:20px;" class="btn btn-primary">Continue shopping</a>
         <div class="col-md-12">
-            <div class="overflow-y-auto" style="max-height: 76vh; width: 100%">
-                <table class="table" style="width: 100%; background-color: #4B5563;">
+            <div class="overflow-y-auto" style="max-height: 76vh; width: 100%; justify-items: end">
+                <table class="table" style="width: 90%; background-color: #4B5563;">
                     <thead class="table-light"
                            style="display: block; width: 100%; background-color: #f37979; text-transform: uppercase">
                     <tr style="width: 100%; height: 6vh; font-weight: bold">
@@ -111,9 +112,9 @@
                 </table>
             </div>
         </div>
-        <div class="col-md-12" style="z-index: 1000;">
+        <div class="col-md-12" style="z-index: 1000;justify-items: end">
             <div class="d-flex justify-content-between"
-                 style="background-color: #fffc73; height: 10vh; font-size: x-large;">
+                 style="background-color: #fffc73; height: 10vh; font-size: x-large;width: 90%">
                 <div class="d-inline" style="width: 30%; align-content: center; margin-left: 20px">
                     <form action="/cart?action=selectedAll" method="post">
                         <label style="color: black" for="selectAll" class="mr-2">Select all product</label>

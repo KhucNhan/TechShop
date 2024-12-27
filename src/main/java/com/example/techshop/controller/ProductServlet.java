@@ -63,9 +63,27 @@ public class ProductServlet extends HttpServlet {
             case "laptop":
                 showLaptops(req, resp);
                 break;
+            case "#":
+                showHome(req, resp);
+                break;
             default:
                 showAllProducts(req, resp);
                 break;
+        }
+    }
+
+    private void showHome(HttpServletRequest req, HttpServletResponse resp) {
+        List<Product> products = dao.selectActiveProducts();
+        req.setAttribute("products", products);
+        req.setAttribute("userAction", true);
+
+        RequestDispatcher dispatcher;
+        dispatcher = req.getRequestDispatcher("web/product.jsp");
+
+        try {
+            dispatcher.forward(req, resp);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -88,6 +106,7 @@ public class ProductServlet extends HttpServlet {
     private void showLaptops(HttpServletRequest req, HttpServletResponse resp) {
         List<Product> products = dao.selectAllLaptops();
         req.setAttribute("products", products);
+        req.setAttribute("userAction", true);
 
         RequestDispatcher dispatcher;
         dispatcher = req.getRequestDispatcher("web/product.jsp");
@@ -102,6 +121,7 @@ public class ProductServlet extends HttpServlet {
     private void showPhones(HttpServletRequest req, HttpServletResponse resp) {
         List<Product> products = dao.selectAllPhones();
         req.setAttribute("products", products);
+        req.setAttribute("userAction", true);
 
         RequestDispatcher dispatcher;
         dispatcher = req.getRequestDispatcher("web/product.jsp");
